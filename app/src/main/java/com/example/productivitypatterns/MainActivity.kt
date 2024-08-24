@@ -9,56 +9,133 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.productivitypatterns.components.charts.BarChart
 import com.example.productivitypatterns.components.charts.LineChart
 import com.example.productivitypatterns.components.charts.RadialCircleChart
 import com.example.productivitypatterns.ui.theme.BlueChartsCode
 import com.example.productivitypatterns.ui.theme.ProductivityPatternsTheme
+import com.example.productivitypatterns.view.LoginView
+import com.example.productivitypatterns.view.StartActivityView
+import com.example.productivitypatterns.view.WeekStatsView
+
+data class BottomNavigationItem(
+    val title: String,
+    val icon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val route: String,
+    val hasNews: Boolean = false,
+    val badgeCount: Int? = null
+)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ProductivityPatternsTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(modifier = Modifier
-                        //.background(Color.White)
-                        .fillMaxSize()) {
-                        Greeting(
-                            name = "Android",
-                            modifier = Modifier.padding(innerPadding)
-                        )
+            val navController = rememberNavController()
+            val items = listOf(
+                BottomNavigationItem(
+                    title = "Login",
+                    icon = Icons.Filled.Home,
+                    unselectedIcon = Icons.Outlined.Home,
+                    route = "Login"
+                ),
+                BottomNavigationItem(
+                    title = "Start Activity",
+                    icon = Icons.Filled.Star,
+                    unselectedIcon = Icons.Outlined.Star,
+                    route = "StartActivity",
+                    hasNews = true
+                ),
+                BottomNavigationItem(
+                    title = "Stats",
+                    icon = Icons.Filled.Person,
+                    unselectedIcon = Icons.Outlined.Person,
+                    route = "WeekStats",
+                    hasNews = false,
+                    badgeCount = 45
+                ),
+            )
 
-                        RadialCircleChart(63, BlueChartsCode, BlueChartsCode, "ola")
+            var selectedItemIndex by rememberSaveable {
+                mutableStateOf(0)
+            }
 
-                        BarChart(listOf("aa","bbb","ccc","ddd","eee","fff","ggg"), listOf(10,20,80,90,34,3,73), BlueChartsCode )
-                        LineChart()
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                Scaffold(
+                    bottomBar = {
+                        NavigationBar {
+                            items.forEachIndexed { index, item ->
+                                NavigationBarItem(
+                                    selected = selectedItemIndex == index,
+                                    onClick = {
+                                        selectedItemIndex = index
+                                        navController.navigate(item.route) {
+                                            // Evitar duplicados en la pila de navegación
+                                            popUpTo(navController.graph.startDestinationId) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    },
+                                    icon = {
+                                        BadgedBox(badge = {}) {
+                                            Icon(
+                                                imageVector = if (index == selectedItemIndex) {
+                                                    item.icon
+                                                } else item.unselectedIcon,
+                                                contentDescription = item.title,
+                                            )
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+                ) { paddingValues ->
+                    // Aquí es donde NavHost debe estar para que cambie el contenido de la pantalla
+                    NavHost(
+                        navController = navController,
+                        startDestination = "StartActivity",
+                        modifier = Modifier.padding(paddingValues)
+                    ) {
+                        composable("Login") {
+                            LoginView()
+                        }
+                        composable("StartActivity") {
+                            StartActivityView()
+                        }
+                        composable("WeekStats") {
+                            WeekStatsView()
+                        }
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ProductivityPatternsTheme {
-        Greeting("Android")
     }
 }
