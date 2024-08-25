@@ -1,5 +1,9 @@
 package com.example.productivitypatterns.view
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import com.example.productivitypatterns.viewmodel.AuthViewModel
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
@@ -8,23 +12,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.productivitypatterns.components.charts.BarChart
 import com.example.productivitypatterns.components.charts.LineChart
 import com.example.productivitypatterns.components.charts.RadialCircleChart
 import com.example.productivitypatterns.ui.theme.BlueChartsCode
-import com.example.productivitypatterns.viewmodel.AuthViewModel
 
 @Composable
-fun LoginView(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel) {
-
-    var email by remember {
-        mutableStateOf("")
-    }
+fun SignupView(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel){
 
     var password by remember {
         mutableStateOf("")
@@ -34,10 +31,13 @@ fun LoginView(modifier: Modifier = Modifier, navController: NavController, authV
     val context = LocalContext.current
 
     LaunchedEffect(authState.value) {
-        when(authState.value){
+        when (authState.value) {
             is AuthState.Authenticated -> navController.navigate("home")
-            is AuthState.Error -> Toast.makeText(context,
-                (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+            is AuthState.Error -> Toast.makeText(
+                context,
+                (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT
+            ).show()
+
             else -> Unit
         }
     }
@@ -47,7 +47,7 @@ fun LoginView(modifier: Modifier = Modifier, navController: NavController, authV
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Login Page", fontSize = 32.sp)
+        Text(text = "Signup Page", fontSize = 32.sp)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -74,21 +74,20 @@ fun LoginView(modifier: Modifier = Modifier, navController: NavController, authV
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            authViewModel.login(email,password)
-        },
-            enabled = authState.value != AuthState.Loading
+        Button(
+            onClick = {
+                authViewModel.signup(email, password)
+            }, enabled = authState.value != AuthState.Loading
         ) {
-            Text(text = "Login")
+            Text(text = "Create account")
         }
-
 
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(onClick = {
-            navController.navigate("signup")
+            navController.navigate("login")
         }) {
-            Text(text = "Don't have an account, Signup")
+            Text(text = "Already have an account, Login")
         }
 
     }
