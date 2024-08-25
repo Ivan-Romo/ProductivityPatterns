@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "71228149106",
+    "project_id": "productivitypatterns-c8188",
+    "storage_bucket": "productivitypatterns-c8188.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71228149106:android:c8a708592c25a6aee5e1eb",
+        "android_client_info": {
+          "package_name": "com.example.productivitypatterns"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApBBejLDd9Y0Xhnu-9Jnh7VXcQehorFqw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -11,6 +11,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -19,10 +20,14 @@ import com.example.productivitypatterns.components.charts.BarChart
 import com.example.productivitypatterns.components.charts.LineChart
 import com.example.productivitypatterns.components.charts.RadialCircleChart
 import com.example.productivitypatterns.ui.theme.BlueChartsCode
+import com.example.productivitypatterns.viewmodel.AuthState
 
 @Composable
 fun SignupView(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel){
 
+    var email by remember {
+        mutableStateOf("")
+    }
     var password by remember {
         mutableStateOf("")
     }
