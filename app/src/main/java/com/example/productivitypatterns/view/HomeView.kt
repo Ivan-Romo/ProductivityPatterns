@@ -1,9 +1,10 @@
 package com.example.productivitypatterns.view
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -18,18 +19,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.productivitypatterns.viewmodel.AuthState
 import com.example.productivitypatterns.viewmodel.AuthViewModel
-import com.example.productivitypatterns.viewmodel.CarListViewModel
+import com.example.productivitypatterns.viewmodel.SessionViewModel
 
 @Composable
 fun HomeView(
     modifier: Modifier = Modifier,
     navController: NavController,
     authViewModel: AuthViewModel,
-    carViewModel: CarListViewModel = viewModel()
+    carViewModel: SessionViewModel = viewModel()
 ) {
     val authState = authViewModel.authState.observeAsState()
 
-    val cars by carViewModel.carList.collectAsStateWithLifecycle()
+    val cars by carViewModel.sessionList.collectAsStateWithLifecycle()
 
     LaunchedEffect(authState.value) {
         when (authState.value) {
@@ -48,9 +49,13 @@ fun HomeView(
         Text(text = "Home Page", fontSize = 32.sp)
 
         for (car in cars) {
-            Text(car.brand + " " + car.id)
+            Text(car.type + " " + car.id)
         }
-        
+
+        Button(onClick = {
+            carViewModel.createCar()
+        }, modifier = Modifier.fillMaxWidth()) {}
+
 
 
 
