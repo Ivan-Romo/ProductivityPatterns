@@ -3,75 +3,77 @@ package com.example.productivitypatterns.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.productivitypatterns.domain.Session
+import com.example.productivitypatterns.domain.hashMapToSession
+import com.example.productivitypatterns.domain.toHashMap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.HashMap
 
 class SessionViewModel : ViewModel() {
 
     private var _sessionList = MutableStateFlow<List<Session>>(emptyList())
     var sessionList = _sessionList.asStateFlow()
 
+    val auth = FirebaseAuth.getInstance()
+    val userId = auth.currentUser?.uid
+
     private val db = Firebase.firestore
 
     init {
-        getCarList()
+        getSessionList()
     }
 
-    private fun getCarList() {
+    private fun getSessionList() {
+        if (userId != null) {
+            val userSessionsDocRef = db.collection("sessions").document(userId)
 
-        db.collection("cars")
-            .addSnapshotListener { value, error ->
-                if (error != null) {
-                    return@addSnapshotListener
-                }
+            userSessionsDocRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val sessions = document.get("sessions") as? List<HashMap<String, Any?>>
 
-                if (value != null) {
-                    _sessionList.value = value.toObjects()
+                        if (sessions != null) {
+                            // Convertimos la lista de HashMaps a una lista de objetos Session
+                            val sessionList = sessions.map { sessionMap ->
+                                hashMapToSession(sessionMap)
+                            }
+
+                            // Actualizamos el estado de _sessionList
+                            _sessionList.value = sessionList
+                        }
+                    } else {
+                        Log.d("getSessionList", "No such document")
+                    }
                 }
-            }
+                .addOnFailureListener { exception ->
+                    Log.w("getSessionList", "Error getting document: ", exception)
+                }
+        }
     }
 
-    fun createCar() {
-        val car = hashMapOf(
-            "id" to 4,
-            "brand" to "OLA"
+    fun createSession() {
+        var session = Session(
+            duration = 120,
+            datetime = LocalDateTime.now(),
+            responses = listOf(),
+            type = "code"
         )
 
-        val auth = FirebaseAuth.getInstance()
-        val userId = auth.currentUser?.uid
         if (userId == null) {
             Log.d("createCar", "User not authenticated")
             return
         }
 
         val db = FirebaseFirestore.getInstance()
-        val userCarDocRef = db.collection("cars").document(userId)
+        val userSessionsDocRef = db.collection("sessions").document(userId)
 
-        // Aquí usamos set con merge para asegurarnos de que el documento se crea si no existe
-        userCarDocRef.set(hashMapOf("cars" to FieldValue.arrayUnion(car)), SetOptions.merge())
-            .addOnSuccessListener {
-                Log.d("createCar", "Car successfully added!")
-            }
-            .addOnFailureListener { e ->
-                Log.w("createCar", "Error adding car", e)
-            }
+        userSessionsDocRef.set(hashMapOf("sessions" to FieldValue.arrayUnion(session)), SetOptions.merge())
 
-    }
-
-    fun updateCar() {
-        val car = hashMapOf(
-            "id" to 4,
-            "brand" to "Mazda"
-        )
-        db.collection("cars")
-            .document("uQ9C9PzGXxw1ivXm0zZ4")
-            .set(car)
-            .addOnSuccessListener {
-                Log.d("document", "UPDATED")
-            }
     }
 }

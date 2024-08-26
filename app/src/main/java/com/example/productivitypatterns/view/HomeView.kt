@@ -26,11 +26,11 @@ fun HomeView(
     modifier: Modifier = Modifier,
     navController: NavController,
     authViewModel: AuthViewModel,
-    carViewModel: SessionViewModel = viewModel()
+    sessionViewModel: SessionViewModel = viewModel()
 ) {
     val authState = authViewModel.authState.observeAsState()
 
-    val cars by carViewModel.sessionList.collectAsStateWithLifecycle()
+    val sessions by sessionViewModel.sessionList.collectAsStateWithLifecycle()
 
     LaunchedEffect(authState.value) {
         when (authState.value) {
@@ -48,12 +48,12 @@ fun HomeView(
     ) {
         Text(text = "Home Page", fontSize = 32.sp)
 
-        for (car in cars) {
-            Text(car.type + " " + car.id)
+        for (session in sessions) {
+            Text(session.id.toString() + " " + session.type + session.datetime)
         }
 
         Button(onClick = {
-            carViewModel.createCar()
+            sessionViewModel.createSession()
         }, modifier = Modifier.fillMaxWidth()) {}
 
 

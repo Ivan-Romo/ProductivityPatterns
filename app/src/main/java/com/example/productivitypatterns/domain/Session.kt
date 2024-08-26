@@ -33,5 +33,36 @@ data class RatingQuestion(
 ) : Question
 
 
+fun Session.toHashMap(): HashMap<String, Any?> {
+    val map = HashMap<String, Any?>()
+    map["id"] = id.toString()
+    map["duration"] = duration
+    map["datetime"] = datetime.toString()
+    map["responses"] = responses.map { response ->
+        hashMapOf(
+            "questionId" to response.first.toString(),
+            "answer" to response.second
+        )
+    }
+    map["type"] = type
+    return map
+}
+
+fun hashMapToSession(sessionMap: HashMap<String, Any?>): Session {
+    return Session(
+        id = UUID.fromString(sessionMap["id"] as String),
+        duration = sessionMap["duration"] as Long,
+        datetime = LocalDateTime.parse(sessionMap["datetime"] as String),
+        responses = (sessionMap["responses"] as List<HashMap<String, Any?>>).map { responseMap ->
+            Pair(
+                UUID.fromString(responseMap["questionId"] as String),
+                (responseMap["answer"] as Long).toInt()
+            )
+        },
+        type = sessionMap["type"] as String
+    )
+}
+
+
 
 
