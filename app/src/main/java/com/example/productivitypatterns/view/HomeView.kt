@@ -110,10 +110,10 @@ fun Home(
             }
         }) { paddingValues ->
             NavHost(
-                navController = navController, startDestination = "Develop", modifier = Modifier.padding(paddingValues)
+                navController = navController, startDestination = "StartActivity", modifier = Modifier.padding(paddingValues)
             ) {
                 composable("StartActivity") {
-                    StartActivityView()
+                    StartActivityView(sessionViewModel)
                 }
                 composable("Develop") {
                     DevelopView(modifier, auxNavController, authViewModel)

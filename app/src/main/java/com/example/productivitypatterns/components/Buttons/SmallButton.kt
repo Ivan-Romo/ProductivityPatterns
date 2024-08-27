@@ -1,12 +1,10 @@
-package com.example.productivitypatterns.components
+package com.example.productivitypatterns.components.Buttons
 
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -31,8 +29,8 @@ fun SmallButton(constr: BoxWithConstraintsScope, icon: ImageVector? = null, text
         shape = RoundedCornerShape(16),
         modifier = Modifier
             .padding(top = constr.maxWidth * 0.04f, end = constr.maxWidth * 0.04f)
-            .width(constr.maxHeight * 0.1f)
-            .height(constr.maxHeight * 0.1f),
+            .width(constr.maxHeight * 0.115f)
+            .height(constr.maxHeight * 0.115f),
 
         colors = ButtonDefaults.elevatedButtonColors(
             containerColor = Color.White // Color de fondo del botón

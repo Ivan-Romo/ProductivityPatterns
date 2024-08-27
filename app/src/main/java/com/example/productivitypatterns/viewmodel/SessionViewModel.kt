@@ -57,13 +57,8 @@ class SessionViewModel : ViewModel() {
         }
     }
 
-    fun createSession() {
-        var session = Session(
-            duration = 120,
-            datetime = LocalDateTime.now(),
-            responses = listOf(),
-            type = "code"
-        )
+    fun createSession(session: Session) {
+
 
         if (userId == null) {
             Log.d("createCar", "User not authenticated")
@@ -73,7 +68,7 @@ class SessionViewModel : ViewModel() {
         val db = FirebaseFirestore.getInstance()
         val userSessionsDocRef = db.collection("sessions").document(userId)
 
-        userSessionsDocRef.set(hashMapOf("sessions" to FieldValue.arrayUnion(session)), SetOptions.merge())
+        userSessionsDocRef.set(hashMapOf("sessions" to FieldValue.arrayUnion(session.toHashMap())), SetOptions.merge())
 
     }
 }

@@ -54,7 +54,7 @@ fun DevelopView(
         }
 
         Button(onClick = {
-            sessionViewModel.createSession()
+            //sessionViewModel.createSession()
         }, modifier = Modifier.fillMaxWidth()) {}
 
 
