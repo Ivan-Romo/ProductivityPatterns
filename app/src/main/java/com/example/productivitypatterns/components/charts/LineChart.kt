@@ -85,7 +85,12 @@ fun LineChart(
     Box(modifier = modifier.fillMaxWidth().height(250.dp)) {
         AndroidView(
             factory = { context ->
-                WebView(context).apply {
+                object : WebView(context) {
+                    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+                        // Evita el desplazamiento ignorando los cambios en la posición de scroll
+                        scrollTo(0, 0)
+                    }
+                }.apply {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         setLayerType(LAYER_TYPE_HARDWARE, null)
                     } else {
@@ -97,6 +102,10 @@ fun LineChart(
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
                     settings.loadWithOverviewMode = true
+
+                    isVerticalScrollBarEnabled = false
+                    isHorizontalScrollBarEnabled = false
+
                     settings.useWideViewPort = true
                     settings.cacheMode = WebSettings.LOAD_NO_CACHE
                     loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)

@@ -32,7 +32,7 @@ fun BarChart(
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif;   
         }
     </style>
 </head>
@@ -134,7 +134,12 @@ fun BarChart(
     Box(modifier = modifier.width(300.dp).height(240.dp)) {
         AndroidView(
             factory = { context ->
-                WebView(context).apply {
+                object : WebView(context) {
+                    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+                        // Evita el desplazamiento ignorando los cambios en la posición de scroll
+                        scrollTo(0, 0)
+                    }
+                }.apply {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         setLayerType(LAYER_TYPE_HARDWARE, null)
                     }
@@ -144,6 +149,8 @@ fun BarChart(
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
                     settings.loadWithOverviewMode = true
+                    isVerticalScrollBarEnabled = false
+                    isHorizontalScrollBarEnabled = false
                     settings.useWideViewPort = true
                     settings.cacheMode = WebSettings.LOAD_NO_CACHE
                     loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)

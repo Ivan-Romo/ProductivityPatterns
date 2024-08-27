@@ -6,7 +6,7 @@ import java.util.UUID
 data class Session(
     val id: UUID = UUID.randomUUID(),
     val duration: Long,
-    val datetime: LocalDateTime,
+    val datetime: LocalDateTime = LocalDateTime.now(),
     val responses: List<Pair<UUID,Int>>,
     val type: String
 )

@@ -6,7 +6,11 @@ val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
 
-val BlueCharts = Color(0x3844e4)
+val BlueCharts = Color(0xFF030A8C)
+
+val Background = Color(0xFFF5F6FD)
+
+val Secondary = Color(0xFFE7D5F2)
 
 val BlueChartsCode = "#3844e4"
 

@@ -5,8 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.productivitypatterns.view.HomeAux
-import com.example.productivitypatterns.view.HomeView
+import com.example.productivitypatterns.view.Home
 import com.example.productivitypatterns.view.LoginView
 import com.example.productivitypatterns.view.SignupView
 import com.example.productivitypatterns.viewmodel.AuthViewModel
@@ -23,7 +22,7 @@ fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel)
             SignupView(modifier, navController, authViewModel)
         }
         composable("home"){
-            HomeAux(modifier, navController, authViewModel)
+            Home(modifier, navController, authViewModel)
         }
     })
 }
