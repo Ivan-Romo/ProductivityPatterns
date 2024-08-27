@@ -18,7 +18,13 @@ import androidx.compose.ui.unit.dp
 import com.example.productivitypatterns.ui.theme.InterFontFamily
 
 @Composable
-fun SmallButton(constr: BoxWithConstraintsScope, icon: ImageVector? = null, text: String = "", onClick: () -> Unit = {}) {
+fun SmallButton(
+    constr: BoxWithConstraintsScope,
+    icon: ImageVector? = null,
+    text: String = "",
+    onClick: () -> Unit = {},
+    size: Float = 0.115f
+) {
     ElevatedButton(
         elevation = ButtonDefaults.elevatedButtonElevation(
             defaultElevation = 10.dp, pressedElevation = 10.dp, disabledElevation = 4.dp
@@ -29,21 +35,21 @@ fun SmallButton(constr: BoxWithConstraintsScope, icon: ImageVector? = null, text
         shape = RoundedCornerShape(16),
         modifier = Modifier
             .padding(top = constr.maxWidth * 0.04f, end = constr.maxWidth * 0.04f)
-            .width(constr.maxHeight * 0.115f)
-            .height(constr.maxHeight * 0.115f),
+            .width(constr.maxHeight * size)
+            .height(constr.maxHeight * size),
 
         colors = ButtonDefaults.elevatedButtonColors(
             containerColor = Color.White // Color de fondo del botón
         ),
     ) {
-        if(icon != null) {
+        if (icon != null) {
             Icon(
                 imageVector = icon,
                 "",
             )
         }
 
-        if(text != "") {
+        if (text != "") {
             Text(
                 text = text,
                 fontFamily = InterFontFamily,

@@ -40,7 +40,7 @@ fun Home(
     val navController = rememberNavController()
     val items = listOf(
         BottomNavigationItem(
-            title = "Start Activity",
+            title = "Session",
             icon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
             route = "StartActivity"
