@@ -36,17 +36,17 @@ class SessionViewModel : ViewModel() {
             userSessionsDocRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
-                        val sessions = document.get("sessions") as? List<HashMap<String, Any?>>
+                        val sessions = document.get("sessions") as List<HashMap<String, Any>>
 
-                        if (sessions != null) {
-                            // Convertimos la lista de HashMaps a una lista de objetos Session
-                            val sessionList = sessions.map { sessionMap ->
-                                hashMapToSession(sessionMap)
-                            }
 
-                            // Actualizamos el estado de _sessionList
-                            _sessionList.value = sessionList
+                        // Convertimos la lista de HashMaps a una lista de objetos Session
+                        val sessionList = sessions.map { sessionMap ->
+                            hashMapToSession(sessionMap)
                         }
+
+                        // Actualizamos el estado de _sessionList
+                        _sessionList.value = sessionList
+
                     } else {
                         Log.d("getSessionList", "No such document")
                     }

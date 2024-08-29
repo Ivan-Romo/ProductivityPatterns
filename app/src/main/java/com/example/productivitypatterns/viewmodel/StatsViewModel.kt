@@ -17,7 +17,7 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
             sessionData = listOf<Session>(
                 Session(
                     duration = 0,
-                    responses = listOf(Pair<UUID, Int>(UUID.randomUUID(), 0)),
+                    responses = mapOf(Pair(UUID.randomUUID().toString(), 0)),
                     type = ""
                 )
             )
@@ -36,7 +36,7 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
     fun getAverageProductivityInTheLast7Days(): Int {
         var total = 0.0
         sessionsLast7Days.forEach { session ->
-            total += session.responses.first().second
+            total += session.responses["prod"]?.toInt() as Int ?: 0
         }
         return (total / sessionsLast7Days.size * 10).toInt()
     }
@@ -45,14 +45,14 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
         var list: MutableList<Int> = mutableListOf()
         var categoriesList: MutableList<String> = mutableListOf()
         sessionsLast7Days.forEach { session ->
-            list.add(session.responses.first().second * 10)
+            list.add(session.responses["prod"] as Int * 10)
             categoriesList.add(session.datetime.formatToDayMonth())
         }
         return Pair<List<String>, List<Int>>(categoriesList, list)
     }
 
     fun getProductivityInTheLastSession(): Int {
-        return lastSession.responses.first().second * 10
+        return lastSession.responses["prod"] as Int * 10
     }
 
     fun getMusicProductivityInTheLastSession(): Map<String, Int> {
@@ -60,8 +60,8 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
 
         sessionsLast7Days.forEach { session ->
             if (session.responses.size >= 3) {
-                val key = (listQuestions[2] as MultipleChoiceQuestion).options[session.responses[2].second]
-                val value = session.responses[0].second * 10
+                val key = (listQuestions.find { q -> q.id =="music"} as MultipleChoiceQuestion).options[session.responses["music"] as Int]
+                val value = session.responses["prod"] as Int * 10
 
                 if (map.containsKey(key)) {
                     val (currentSum, count) = map[key]!!
@@ -87,12 +87,12 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
 
         var categoriesList: MutableList<String> = mutableListOf()
         sessionsLast7Days.forEach { session ->
-            productivityList.add(session.responses.first().second * 10)
+            productivityList.add(session.responses["prod"] as Int * 10)
             categoriesList.add(session.datetime.formatToDayMonth())
 
             if(session.responses.size >= 6) {
-                sleepList.add(session.responses[4].second*10)
-                stressList.add(session.responses[5].second*10)
+                sleepList.add(session.responses["sleep"] as Int *10)
+                stressList.add(session.responses["stress"] as Int *10)
             }
         }
 
@@ -113,9 +113,9 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
 
         sessionsLast7Days.forEach { session ->
             if (session.responses.size >= 6) {
-                val productivity = session.responses[0].second
+                val productivity = session.responses["prod"] as Int
 
-                if (session.responses[1].second == 0) {
+                if (session.responses["train"] as Int == 0) {
                     productivityWhenNotTrained += productivity*10
                     countWhenNotTrained++
                 } else {
@@ -123,7 +123,7 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
                     countWhenTrained++
                 }
 
-                if (session.responses[3].second == 0) {
+                if (session.responses["cafe"] as Int == 0) {
                     productivityWhenNoCaffeine += productivity*10
                     countWhenNoCaffeine++
                 } else {

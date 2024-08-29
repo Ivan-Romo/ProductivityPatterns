@@ -1,68 +1,66 @@
 package com.example.productivitypatterns.domain
 
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 data class Session(
-    val id: UUID = UUID.randomUUID(),
+    val id: String = UUID.randomUUID().toString(),
     val duration: Long,
     val datetime: LocalDateTime = LocalDateTime.now(),
-    val responses: List<Pair<UUID,Int>>,
+    val responses: Map<String,Int>,
     val type: String
 )
 
 interface Question {
-    val id: UUID
+    val id: String
     val question: String
 }
 
 data class MultipleChoiceQuestion(
-    override val id: UUID = UUID.randomUUID(),
+    override val id: String = UUID.randomUUID().toString(),
     override val question: String,
     val options: List<String>,
 ) : Question
 
 data class YesNoQuestion(
-    override val id: UUID = UUID.randomUUID(),
+    override val id: String = UUID.randomUUID().toString(),
     override val question: String,
 ) : Question
 
 data class RatingQuestion(
-    override val id: UUID = UUID.randomUUID(),
+    override val id: String = UUID.randomUUID().toString(),
     override val question: String,
 ) : Question
 
 
-fun Session.toHashMap(): HashMap<String, Any?> {
-    val map = HashMap<String, Any?>()
-    map["id"] = id.toString()
-    map["duration"] = duration
-    map["datetime"] = datetime.toString()
-    map["responses"] = responses.map { response ->
-        hashMapOf(
-            "questionId" to response.first.toString(),
-            "answer" to response.second
-        )
-    }
-    map["type"] = type
-    return map
-}
-
-fun hashMapToSession(sessionMap: HashMap<String, Any?>): Session {
-    return Session(
-        id = UUID.fromString(sessionMap["id"] as String),
-        duration = sessionMap["duration"] as Long,
-        datetime = LocalDateTime.parse(sessionMap["datetime"] as String),
-        responses = (sessionMap["responses"] as List<HashMap<String, Any?>>).map { responseMap ->
-            Pair(
-                UUID.fromString(responseMap["questionId"] as String),
-                (responseMap["answer"] as Long).toInt()
-            )
-        },
-        type = sessionMap["type"] as String
+fun Session.toHashMap(): HashMap<String, Any> {
+    val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+    return hashMapOf(
+        "id" to id,
+        "duration" to duration,
+        "datetime" to datetime.format(formatter),
+        "responses" to responses,
+        "type" to type
     )
 }
 
+fun hashMapToSession(map: HashMap<String, Any>): Session {
+    @Suppress("UNCHECKED_CAST")
+    val responsesMap = map["responses"] as Map<String, Any> // Obtener el mapa como Map<String, Any>
+    val convertedResponses = responsesMap.mapValues { (_, value) ->
+        // Convertir cada valor a Int, si es Long o si es otro tipo numérico
+        (value as? Number)?.toInt() ?: throw IllegalArgumentException("Invalid number format in responses")
+    }
+
+    return Session(
+        id = map["id"] as String,
+        duration = (map["duration"] as Long),
+        datetime = LocalDateTime.parse(map["datetime"] as String),
+        responses = convertedResponses, // Usar el mapa convertido
+        type = map["type"] as String
+    )
+}
 
 
 

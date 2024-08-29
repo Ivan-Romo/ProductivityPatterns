@@ -7,10 +7,10 @@ import com.example.productivitypatterns.domain.YesNoQuestion
 import java.util.*
 
 val listQuestions = listOf<Question>(
-    RatingQuestion(question = "How would you rate your productivity?"),
-    YesNoQuestion(question = "Have you trained today?"),
+    RatingQuestion(id = "prod", question = "How would you rate your productivity?"),
+    YesNoQuestion(id = "train",question = "Have you trained today?"),
     MultipleChoiceQuestion(
-
+        id = "music",
         question = "What genre of music have you listened to?",
         options = listOf(
             "No music",
@@ -20,10 +20,11 @@ val listQuestions = listOf<Question>(
             "Other (TODO)"
         )
     ),
-    YesNoQuestion(question = "Did you have caffeine?"),
-    RatingQuestion(question = "How did you sleep?"),
-    RatingQuestion(question = "What was the stress level during the session?"),
+    YesNoQuestion("cafe",question = "Did you have caffeine?"),
+    RatingQuestion(id = "sleep",question = "How did you sleep?"),
+    RatingQuestion(id ="stress",question = "What was the stress level during the session?"),
     MultipleChoiceQuestion(
+        id ="location",
         question = "Where was the session?",
         options = listOf(
             "Café",

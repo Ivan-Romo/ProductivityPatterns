@@ -24,7 +24,7 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel:
 
     var questionsMode by remember { mutableStateOf(false) }
     var questionIndex: Int by remember { mutableStateOf(0) }
-    var answerList: MutableList<Pair<UUID, Int>> by remember {  mutableStateOf(mutableListOf())}
+    var answerList: MutableMap<String, Int> by remember {  mutableStateOf(mutableMapOf())}
     var dateTimeCustom: LocalDateTime
 
 
@@ -124,7 +124,7 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel:
             DisplayQuestion(
                 listQuestions[questionIndex],
                 onReply = {
-                    answerList.add(Pair(listQuestions[questionIndex].id, it))
+                    answerList[listQuestions[questionIndex].id] = it
                     questionIndex++
                     if (questionIndex >= listQuestions.size) {
 

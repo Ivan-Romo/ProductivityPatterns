@@ -46,7 +46,7 @@ fun StartActivityView(viewModel: SessionViewModel) {
     val coroutineScope = rememberCoroutineScope()
     var activityFinished: Boolean by remember { mutableStateOf(false) }
     var questionIndex: Int by remember { mutableStateOf(0) }
-    var answerList: MutableList<Pair<UUID, Int>> = mutableListOf()
+    var answerList: MutableMap<String, Int> = mutableMapOf()
     var addActivity: Boolean by remember { mutableStateOf(false) }
 
     var buttonText = "Start session"
@@ -157,7 +157,7 @@ fun StartActivityView(viewModel: SessionViewModel) {
                         DisplayQuestion(
                             listQuestions[questionIndex],
                             onReply = {
-                                answerList.add(Pair(listQuestions[questionIndex].id, it))
+                                answerList[listQuestions[questionIndex].id]=  it
                                 questionIndex++
                                 if (questionIndex >= listQuestions.size) {
                                     var session =
