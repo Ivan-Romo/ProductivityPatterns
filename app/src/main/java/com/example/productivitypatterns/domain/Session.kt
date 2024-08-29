@@ -1,8 +1,16 @@
 package com.example.productivitypatterns.domain
 
+import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+
+@Serializable
+data class UserData(
+    val customQuestions: List<Question>,
+    val customAnswers: Map<String,String>,
+    val mode : Boolean
+)
 
 data class Session(
     val id: String = UUID.randomUUID().toString(),
@@ -12,26 +20,30 @@ data class Session(
     val type: String
 )
 
-interface Question {
-    val id: String
-    val question: String
+@Serializable
+sealed class Question {
+    abstract val id: String
+    abstract val question: String
+
+    @Serializable
+    data class MultipleChoiceQuestion(
+        override val id: String = UUID.randomUUID().toString(),
+        override val question: String,
+        val options: List<String>,
+    ) : Question()
+
+    @Serializable
+    data class YesNoQuestion(
+        override val id: String = UUID.randomUUID().toString(),
+        override val question: String,
+    ) : Question()
+
+    @Serializable
+    data class RatingQuestion(
+        override val id: String = UUID.randomUUID().toString(),
+        override val question: String,
+    ) : Question()
 }
-
-data class MultipleChoiceQuestion(
-    override val id: String = UUID.randomUUID().toString(),
-    override val question: String,
-    val options: List<String>,
-) : Question
-
-data class YesNoQuestion(
-    override val id: String = UUID.randomUUID().toString(),
-    override val question: String,
-) : Question
-
-data class RatingQuestion(
-    override val id: String = UUID.randomUUID().toString(),
-    override val question: String,
-) : Question
 
 
 fun Session.toHashMap(): HashMap<String, Any> {

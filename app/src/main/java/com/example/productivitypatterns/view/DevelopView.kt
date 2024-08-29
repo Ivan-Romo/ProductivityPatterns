@@ -1,25 +1,27 @@
 package com.example.productivitypatterns.view
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.productivitypatterns.components.Buttons.MediumButton
+import com.example.productivitypatterns.domain.Question
+import com.example.productivitypatterns.domain.UserData
 import com.example.productivitypatterns.viewmodel.AuthState
 import com.example.productivitypatterns.viewmodel.AuthViewModel
 import com.example.productivitypatterns.viewmodel.SessionViewModel
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.File
 
 
 @Composable
@@ -29,6 +31,7 @@ fun DevelopView(
     authViewModel: AuthViewModel,
     sessionViewModel: SessionViewModel = viewModel()
 ) {
+    var context = LocalContext.current
     val authState = authViewModel.authState.observeAsState()
 
     val sessions by sessionViewModel.sessionList.collectAsStateWithLifecycle()
@@ -39,27 +42,62 @@ fun DevelopView(
             else -> Unit
         }
     }
+    var data : UserData? by remember { mutableStateOf(null) }
+
+    val userAux = UserData(
+        mode = false,
+        customQuestions = listOf(
+            Question.YesNoQuestion(id = "cocacolaEspuma", "No veas que guapo no?"),
+            Question.MultipleChoiceQuestion(
+                id = "EPAA", "MultiChoce?", listOf("no c", "dependeee", "puedeser")
+            )
+        ),
+        customAnswers = mapOf()
+    )
+
+    BoxWithConstraints {
+        var constr = this
+
+
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "Home Page", fontSize = 32.sp)
+
+            MediumButton(constr, buttonText = "Save", onClick = {
+                val json = Json.encodeToString(userAux)
+                val file = File(context.filesDir, "user_data.json")
+                file.writeText(json)
+
+            })
+            MediumButton(constr, buttonText = "Load", onClick = {
+
+                val file = File(context.filesDir, "user_data.json")
+                if (file.exists()) {
+                    val json = file.readText()
+
+                    data = Json.decodeFromString<UserData>(json)
+                }
+            })
+
+            if(data!=null){
+                Text(data!!.customQuestions.toString())
+            }
 
 
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Home Page", fontSize = 32.sp)
-
-        Button(onClick = {
-            //sessionViewModel.createSession()
-        }, modifier = Modifier.fillMaxWidth()) {}
 
 
 
 
-        TextButton(onClick = {
-            authViewModel.signout()
-        }) {
-            Text(text = "Sign out")
+
+            TextButton(onClick = {
+                authViewModel.signout()
+            }) {
+                Text(text = "Sign out")
+            }
         }
     }
 

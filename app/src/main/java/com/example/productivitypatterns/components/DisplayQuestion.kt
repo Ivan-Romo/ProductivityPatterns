@@ -17,9 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.productivitypatterns.components.Buttons.MediumButton
 import com.example.productivitypatterns.components.Buttons.SmallButton
-import com.example.productivitypatterns.domain.MultipleChoiceQuestion
-import com.example.productivitypatterns.domain.RatingQuestion
-import com.example.productivitypatterns.domain.YesNoQuestion
 import com.example.productivitypatterns.ui.theme.*
 
 @Composable
@@ -40,19 +37,19 @@ fun DisplayQuestion(question: Question, onReply: (Int) -> Unit, constr: BoxWithC
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-                if (question is YesNoQuestion) {
+                if (question is Question.YesNoQuestion) {
                     Row {
                         SmallButton(constr, text = "Yes", onClick = { onReply(1) })
                         SmallButton(constr, text = "No", onClick = { onReply(0) })
                     }
-                } else if (question is MultipleChoiceQuestion) {
+                } else if (question is Question.MultipleChoiceQuestion) {
                     Column {
                         question.options.forEachIndexed { index, option ->
                             MediumButton(constr, buttonText = option, onClick = { onReply(index) })
                         }
                     }
 
-                } else if (question is RatingQuestion) {
+                } else if (question is Question.RatingQuestion) {
                     for (i in 1..10 step 3) {
                         Row(modifier = Modifier.padding(top = 10.dp)) {
                             SmallButton(constr, text = i.toString(), onClick = { onReply(i) })

@@ -1,7 +1,7 @@
 package com.example.productivitypatterns.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.productivitypatterns.domain.MultipleChoiceQuestion
+import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.domain.Session
 import com.example.productivitypatterns.util.formatToDayMonth
 import com.example.productivitypatterns.util.listQuestions
@@ -60,7 +60,7 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
 
         sessionsLast7Days.forEach { session ->
             if (session.responses.size >= 3) {
-                val key = (listQuestions.find { q -> q.id =="music"} as MultipleChoiceQuestion).options[session.responses["music"] as Int]
+                val key = (listQuestions.find { q -> q.id =="music"} as Question.MultipleChoiceQuestion).options[session.responses["music"] as Int]
                 val value = session.responses["prod"] as Int * 10
 
                 if (map.containsKey(key)) {
