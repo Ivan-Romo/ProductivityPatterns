@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.productivitypatterns.components.Buttons.BigButton
@@ -33,6 +32,12 @@ import java.util.*
 //example@gmail.com
 //ola1234
 //qRpm5LMD4vgxfFzOtzleXuBq1AU2
+
+
+//dateWeek@gmail.com
+//ola1234
+//87NsxfU8VrPqQg4eeDxnaWuHsXy2
+
 
 @Composable
 fun StartActivityView(viewModel: SessionViewModel) {
@@ -89,8 +94,6 @@ fun StartActivityView(viewModel: SessionViewModel) {
                                         activityFinished = true
                                     }
                                 },
-
-                            // Fondo blanco
                         ) {
                             Column(
                                 modifier = Modifier

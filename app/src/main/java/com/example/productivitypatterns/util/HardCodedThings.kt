@@ -4,18 +4,33 @@ import com.example.productivitypatterns.domain.MultipleChoiceQuestion
 import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.domain.RatingQuestion
 import com.example.productivitypatterns.domain.YesNoQuestion
+import java.util.*
 
 val listQuestions = listOf<Question>(
-    RatingQuestion(question = "¿Como valorarias tu productividad? (entre 0 y 10)"),
-    YesNoQuestion(question = "¿Has tomado cafe?"),
+    RatingQuestion(question = "How would you rate your productivity?"),
+    YesNoQuestion(question = "Have you trained today?"),
     MultipleChoiceQuestion(
-        question = "¿Qué tipo de música has esuchado?",
+
+        question = "What genre of music have you listened to?",
         options = listOf(
-            "Sin musica",
-            "Ruido blanco",
+            "No music",
+            "White noise",
             "Lo fi",
             "Rock",
-            "Otro (TODO)"
+            "Other (TODO)"
+        )
+    ),
+    YesNoQuestion(question = "Did you have caffeine?"),
+    RatingQuestion(question = "How did you sleep?"),
+    RatingQuestion(question = "What was the stress level during the session?"),
+    MultipleChoiceQuestion(
+        question = "Where was the session?",
+        options = listOf(
+            "Café",
+            "Office",
+            "Home",
+            "Library",
+            "Other (TODO)"
         )
     ),
 )

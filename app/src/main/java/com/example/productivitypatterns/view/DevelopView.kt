@@ -49,10 +49,6 @@ fun DevelopView(
     ) {
         Text(text = "Home Page", fontSize = 32.sp)
 
-        for (session in sessions) {
-            Text(session.id.toString() + " " + session.type + session.datetime)
-        }
-
         Button(onClick = {
             //sessionViewModel.createSession()
         }, modifier = Modifier.fillMaxWidth()) {}

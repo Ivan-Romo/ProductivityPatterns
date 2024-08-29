@@ -3,15 +3,12 @@ package com.example.productivitypatterns.view
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.productivitypatterns.components.Buttons.MediumButton
 import com.example.productivitypatterns.components.DisplayQuestion
 import com.example.productivitypatterns.domain.Session
@@ -27,7 +24,7 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel:
 
     var questionsMode by remember { mutableStateOf(false) }
     var questionIndex: Int by remember { mutableStateOf(0) }
-    var answerList: MutableList<Pair<UUID, Int>> = mutableListOf()
+    var answerList: MutableList<Pair<UUID, Int>> by remember {  mutableStateOf(mutableListOf())}
     var dateTimeCustom: LocalDateTime
 
 

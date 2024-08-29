@@ -28,6 +28,7 @@ import com.example.productivitypatterns.R
 import com.example.productivitypatterns.ui.theme.InterFontFamily
 import com.example.productivitypatterns.viewmodel.AuthViewModel
 import com.example.productivitypatterns.viewmodel.SessionViewModel
+import com.example.productivitypatterns.viewmodel.StatsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -119,7 +120,7 @@ fun Home(
                     DevelopView(modifier, auxNavController, authViewModel)
                 }
                 composable("WeekStats") {
-                    WeekStatsView()
+                    WeekStatsView(StatsViewModel(sessionViewModel))
                 }
             }
         }

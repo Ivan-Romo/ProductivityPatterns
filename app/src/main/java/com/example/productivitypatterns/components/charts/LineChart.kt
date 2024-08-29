@@ -15,9 +15,25 @@ import androidx.compose.foundation.layout.*
 
 @Composable
 fun LineChart(
-
+    dataSeries: List<Pair<String, List<Int>>>,  // Lista de pares nombre y datos de la serie
+    categories: List<String>,                   // Lista de categorías para el eje X
+    colors: List<String>,                       // Lista de colores para las series
     modifier: Modifier = Modifier
 ) {
+// Convertir la lista de series en una representación JSON para ApexCharts
+    val seriesJson = dataSeries.mapIndexed { index, (name, data) ->
+        """
+        {
+            name: '$name',
+            data: ${data.toString()},
+            color: '${colors.getOrNull(index) ?: "#000"}'
+        }
+        """
+    }.joinToString(",")
+
+    // Convertir la lista de categorías en una representación JSON para ApexCharts
+    val categoriesJson = categories.joinToString(prefix = "[", postfix = "]") { "\"$it\"" }
+
     val htmlContent = """
 <!DOCTYPE html>
 <html lang="es">
@@ -29,23 +45,20 @@ fun LineChart(
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts/dist/apexcharts.css">
 </head>
 <body>
-    <div id="chart"></div>
+    <div id="chart" style="margin-top:-1em; margin-left:-1em"></div>
 
     <!-- Incluir ApexCharts JS -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         // Datos y opciones del gráfico
         const options = {
-            series: [{
-                name: 'series1',
-                data: [31, 40, 28, 51, 42, 109, 100]
-            }, {
-                name: 'series2',
-                data: [11, 32, 45, 32, 34, 52, 41]
-            }],
+            series: [ $seriesJson ],
             chart: {
-                height: 350,
-                type: 'area'
+                height: 220,
+                type: 'area',
+                toolbar: {
+                    show: false
+                }
             },
             dataLabels: {
                 enabled: false
@@ -54,22 +67,9 @@ fun LineChart(
                 curve: 'smooth'
             },
             xaxis: {
-                type: 'datetime',
-                categories: [
-                    "2018-09-19T00:00:00.000Z", 
-                    "2018-09-19T01:30:00.000Z", 
-                    "2018-09-19T02:30:00.000Z", 
-                    "2018-09-19T03:30:00.000Z", 
-                    "2018-09-19T04:30:00.000Z", 
-                    "2018-09-19T05:30:00.000Z", 
-                    "2018-09-19T06:30:00.000Z"
-                ]
+                type: 'category',  // Cambiado a 'category' para mantener el formato de las categorías
+                categories: $categoriesJson
             },
-            tooltip: {
-                x: {
-                    format: 'dd/MM/yy HH:mm'
-                }
-            }
         };
 
         // Crear el gráfico
@@ -78,11 +78,10 @@ fun LineChart(
     </script>
 </body>
 </html>
-
-
     """.trimIndent()
 
-    Box(modifier = modifier.fillMaxWidth().height(250.dp)) {
+
+    Box(modifier = modifier.fillMaxWidth().height(210.dp)) {
         AndroidView(
             factory = { context ->
                 object : WebView(context) {
