@@ -4,7 +4,7 @@ package com.example.productivitypatterns.util
 import com.example.productivitypatterns.domain.Question
 import java.util.*
 
-val listQuestions = listOf<Question>(
+var listQuestions = mutableListOf<Question>(
     Question.RatingQuestion(id = "prod", question = "How would you rate your productivity?"),
     Question.YesNoQuestion(id = "train", question = "Have you trained today?"),
     Question.MultipleChoiceQuestion(

@@ -11,12 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.productivitypatterns.ui.theme.InterFontFamily
 
 @Composable
-fun MediumButton(constr: BoxWithConstraintsScope, onClick: () -> Unit, buttonText: String) {
+fun MediumButton(constr: BoxWithConstraintsScope, onClick: () -> Unit, buttonText: String, width: Dp = constr.maxWidth * 0.7f) {
     ElevatedButton(
         elevation = ButtonDefaults.elevatedButtonElevation(
             defaultElevation = 10.dp, pressedElevation = 10.dp, disabledElevation = 4.dp
@@ -27,7 +28,7 @@ fun MediumButton(constr: BoxWithConstraintsScope, onClick: () -> Unit, buttonTex
         shape = RoundedCornerShape(16),
         modifier = Modifier
             .padding(bottom = constr.maxWidth * 0.1f)
-            .width(constr.maxWidth * 0.7f)
+            .width(width)
             .height(constr.maxHeight * 0.06f),
 
         colors = ButtonDefaults.elevatedButtonColors(

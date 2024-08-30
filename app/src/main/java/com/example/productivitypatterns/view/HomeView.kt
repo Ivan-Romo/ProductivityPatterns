@@ -3,9 +3,11 @@ package com.example.productivitypatterns.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
@@ -14,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +30,7 @@ import com.example.productivitypatterns.BottomNavigationItem
 import com.example.productivitypatterns.R
 import com.example.productivitypatterns.ui.theme.InterFontFamily
 import com.example.productivitypatterns.viewmodel.AuthViewModel
+import com.example.productivitypatterns.viewmodel.PersonalViewModel
 import com.example.productivitypatterns.viewmodel.SessionViewModel
 import com.example.productivitypatterns.viewmodel.StatsViewModel
 
@@ -38,6 +42,8 @@ fun Home(
     authViewModel: AuthViewModel,
     sessionViewModel: SessionViewModel = viewModel()
 ) {
+
+    var context = LocalContext.current
     val navController = rememberNavController()
     val items = listOf(
         BottomNavigationItem(
@@ -51,9 +57,17 @@ fun Home(
         ),
         BottomNavigationItem(
             title = "Stats",
+            icon = Icons.Filled.Analytics,
+            unselectedIcon = Icons.Outlined.Analytics,
+            route = "WeekStats",
+            hasNews = false,
+            badgeCount = 45
+        ),
+        BottomNavigationItem(
+            title = "Personalization",
             icon = Icons.Filled.Person,
             unselectedIcon = Icons.Outlined.Person,
-            route = "WeekStats",
+            route = "Personal",
             hasNews = false,
             badgeCount = 45
         ),
@@ -121,6 +135,9 @@ fun Home(
                 }
                 composable("WeekStats") {
                     WeekStatsView(StatsViewModel(sessionViewModel))
+                }
+                composable("Personal") {
+                   PersonalView(PersonalViewModel(context))
                 }
             }
         }

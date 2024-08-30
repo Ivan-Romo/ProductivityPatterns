@@ -5,13 +5,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-@Serializable
-data class UserData(
-    val customQuestions: List<Question>,
-    val customAnswers: Map<String,String>,
-    val mode : Boolean
-)
-
 data class Session(
     val id: String = UUID.randomUUID().toString(),
     val duration: Long,

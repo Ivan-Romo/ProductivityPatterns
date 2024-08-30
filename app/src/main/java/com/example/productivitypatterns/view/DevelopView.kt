@@ -1,7 +1,6 @@
 package com.example.productivitypatterns.view
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -15,7 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.productivitypatterns.components.Buttons.MediumButton
 import com.example.productivitypatterns.domain.Question
-import com.example.productivitypatterns.domain.UserData
+import com.example.productivitypatterns.domain.Personalization
 import com.example.productivitypatterns.viewmodel.AuthState
 import com.example.productivitypatterns.viewmodel.AuthViewModel
 import com.example.productivitypatterns.viewmodel.SessionViewModel
@@ -42,18 +41,9 @@ fun DevelopView(
             else -> Unit
         }
     }
-    var data : UserData? by remember { mutableStateOf(null) }
+    var data : Personalization? by remember { mutableStateOf(null) }
 
-    val userAux = UserData(
-        mode = false,
-        customQuestions = listOf(
-            Question.YesNoQuestion(id = "cocacolaEspuma", "No veas que guapo no?"),
-            Question.MultipleChoiceQuestion(
-                id = "EPAA", "MultiChoce?", listOf("no c", "dependeee", "puedeser")
-            )
-        ),
-        customAnswers = mapOf()
-    )
+    val userAux = Personalization.default()
 
     BoxWithConstraints {
         var constr = this
@@ -78,7 +68,7 @@ fun DevelopView(
                 if (file.exists()) {
                     val json = file.readText()
 
-                    data = Json.decodeFromString<UserData>(json)
+                    data = Json.decodeFromString<Personalization>(json)
                 }
             })
 
