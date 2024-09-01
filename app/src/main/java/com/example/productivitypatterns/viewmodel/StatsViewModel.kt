@@ -59,7 +59,7 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
         var map: MutableMap<String, Pair<Int, Int>> = mutableMapOf() // Pair to keep track of sum and count
 
         sessionsLast7Days.forEach { session ->
-            if (session.responses.size >= 3) {
+            if (session.responses.containsKey("music")) {
                 val key = (listQuestions.find { q -> q.id =="music"} as Question.MultipleChoiceQuestion).options[session.responses["music"] as Int]
                 val value = session.responses["prod"] as Int * 10
 

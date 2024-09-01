@@ -23,6 +23,7 @@ import com.example.productivitypatterns.domain.Session
 import com.example.productivitypatterns.ui.theme.*
 import com.example.productivitypatterns.util.formatTime
 import com.example.productivitypatterns.util.listQuestions
+import com.example.productivitypatterns.viewmodel.PersonalViewModel
 import com.example.productivitypatterns.viewmodel.SessionViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -40,7 +41,7 @@ import java.util.*
 
 
 @Composable
-fun StartActivityView(viewModel: SessionViewModel) {
+fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalViewModel) {
     var started: Boolean by remember { mutableStateOf(false) }
     val timerState = remember { mutableStateOf(0L) }
     val coroutineScope = rememberCoroutineScope()
@@ -154,12 +155,13 @@ fun StartActivityView(viewModel: SessionViewModel) {
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         Text("Progress Bar Question Number: " + questionIndex)
+                        var questionList = personalViewModel.getListEnabledQuestions()
                         DisplayQuestion(
-                            listQuestions[questionIndex],
+                            questionList[questionIndex],
                             onReply = {
-                                answerList[listQuestions[questionIndex].id]=  it
+                                answerList[questionList[questionIndex].id]=  it
                                 questionIndex++
-                                if (questionIndex >= listQuestions.size) {
+                                if (questionIndex >= questionList.size) {
                                     var session =
                                         Session(duration = timerState.value, responses = answerList, type = "TODO")
                                     viewModel.createSession(session)

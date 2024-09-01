@@ -44,6 +44,7 @@ fun Home(
 ) {
 
     var context = LocalContext.current
+    var personalViewModel = PersonalViewModel(context)
     val navController = rememberNavController()
     val items = listOf(
         BottomNavigationItem(
@@ -128,7 +129,7 @@ fun Home(
                 navController = navController, startDestination = "StartActivity", modifier = Modifier.padding(paddingValues)
             ) {
                 composable("StartActivity") {
-                    StartActivityView(sessionViewModel)
+                    StartActivityView(sessionViewModel, personalViewModel )
                 }
                 composable("Develop") {
                     DevelopView(modifier, auxNavController, authViewModel)
@@ -137,7 +138,7 @@ fun Home(
                     WeekStatsView(StatsViewModel(sessionViewModel))
                 }
                 composable("Personal") {
-                   PersonalView(PersonalViewModel(context))
+                   PersonalView(personalViewModel)
                 }
             }
         }

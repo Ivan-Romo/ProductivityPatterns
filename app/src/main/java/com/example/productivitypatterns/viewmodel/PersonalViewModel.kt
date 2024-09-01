@@ -10,35 +10,46 @@ import kotlinx.serialization.json.Json
 import java.io.File
 
 class PersonalViewModel(private val context: Context) : ViewModel() {
-    var info : Personalization = Personalization.default()
+    var info: Personalization = Personalization.default()
 
-    init{
+    init {
         val file = File(context.filesDir, "user_data.json")
         if (file.exists()) {
             val json = file.readText()
 
             info = Json.decodeFromString<Personalization>(json)
-            info.customQuestions.forEach {
-                question -> listQuestions.add(question)
+            info.customQuestions.forEach { question ->
+                listQuestions.add(question)
             }
-        }
-        else{
+        } else {
             val json = Json.encodeToString(info)
             val file = File(context.filesDir, "user_data.json")
             file.writeText(json)
         }
     }
 
-    fun getListQuestionsAndEnabled(): List<Pair<Question,Boolean>> {
-        var list = mutableListOf<Pair<Question,Boolean>>()
+    fun getListQuestionsAndEnabled(): List<Pair<Question, Boolean>> {
+        var list = mutableListOf<Pair<Question, Boolean>>()
         listQuestions.forEach { question ->
-            list.add(Pair(question,info.enabledQuestions[question.id]!!))
+            if (!list.contains(Pair(question, info.enabledQuestions[question.id]!!))) {
+                list.add(Pair(question, info.enabledQuestions[question.id]!!))
+            }
         }
         return list
     }
 
-    fun addCustomQuestion(question: Question){
-        if(!info.customQuestions.contains(question) && !listQuestions.contains(question)) {
+    fun getListEnabledQuestions(): List<Question>{
+        var list = mutableListOf<Question>()
+        listQuestions.forEach { question ->
+            if(info.enabledQuestions[question.id]!! && !list.contains(question)){
+                list.add(question)
+            }
+        }
+        return list
+    }
+
+    fun addCustomQuestion(question: Question) {
+        if (!info.customQuestions.contains(question) && !listQuestions.contains(question)) {
             info.customQuestions.add(question)
             info.enabledQuestions[question.id] = true
             saveUserPersonalization()
@@ -46,20 +57,29 @@ class PersonalViewModel(private val context: Context) : ViewModel() {
         }
     }
 
-    fun saveUserPersonalization(){
+    fun changeEnabled(id: String) {
+        if (info.enabledQuestions.contains(id)) {
+            info.enabledQuestions[id] = !info.enabledQuestions[id]!!
+
+            saveUserPersonalization()
+            loadUserPersonalization()
+        }
+    }
+
+    fun saveUserPersonalization() {
         val json = Json.encodeToString(info)
         val file = File(context.filesDir, "user_data.json")
         file.writeText(json)
     }
 
-    fun loadUserPersonalization(){
+    fun loadUserPersonalization() {
         val file = File(context.filesDir, "user_data.json")
         if (file.exists()) {
             val json = file.readText()
 
             info = Json.decodeFromString<Personalization>(json)
-            info.customQuestions.forEach {
-                    question -> listQuestions.add(question)
+            info.customQuestions.forEach { question ->
+                listQuestions.add(question)
             }
         }
     }

@@ -47,6 +47,10 @@ fun DisplayQuestion(question: Question, onReply: (Int) -> Unit, constr: BoxWithC
                         question.options.forEachIndexed { index, option ->
                             MediumButton(constr, buttonText = option, onClick = { onReply(index) })
                         }
+                        MediumButton(constr, buttonText = "Other", onClick = {
+                            onReply(question.options.size)
+                            //TODO
+                        })
                     }
 
                 } else if (question is Question.RatingQuestion) {

@@ -85,6 +85,7 @@ fun PersonalView(viewModel: PersonalViewModel) {
                                     checked = isChecked,
                                     onCheckedChange = {
                                         isChecked = it
+                                        viewModel.changeEnabled(question.first.id)
                                     }
                                 )
                             }

@@ -15,10 +15,9 @@ var listQuestions = mutableListOf<Question>(
             "White noise",
             "Lo fi",
             "Rock",
-            "Other (TODO)"
         )
     ),
-    Question.YesNoQuestion("cafe", question = "Did you have caffeine?"),
+    Question.YesNoQuestion(id = "cafe", question = "Did you have caffeine?"),
     Question.RatingQuestion(id = "sleep", question = "How did you sleep?"),
     Question.RatingQuestion(id = "stress", question = "What was the stress level during the session?"),
     Question.MultipleChoiceQuestion(
@@ -29,7 +28,6 @@ var listQuestions = mutableListOf<Question>(
             "Office",
             "Home",
             "Library",
-            "Other (TODO)"
         )
     ),
 )
