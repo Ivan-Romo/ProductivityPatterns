@@ -171,7 +171,7 @@ fun PersonalView(viewModel: PersonalViewModel) {
                                     else if(type=="rating"){
                                         quest = Question.RatingQuestion(question = question ?: "")
                                     }else if(type=="multiple"){
-                                        quest = Question.MultipleChoiceQuestion(question = question ?: "", options = textFields)
+                                        quest = Question.MultipleChoiceQuestion(question = question ?: "", options = textFields.toMutableList())
                                     }
 
                                     if(quest != null){

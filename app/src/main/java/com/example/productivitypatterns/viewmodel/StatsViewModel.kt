@@ -17,7 +17,7 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
             sessionData = listOf<Session>(
                 Session(
                     duration = 0,
-                    responses = mapOf(Pair(UUID.randomUUID().toString(), 0)),
+                    responses = mapOf(Pair(UUID.randomUUID().toString(), "")),
                     type = ""
                 )
             )
@@ -36,7 +36,7 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
     fun getAverageProductivityInTheLast7Days(): Int {
         var total = 0.0
         sessionsLast7Days.forEach { session ->
-            total += session.responses["prod"]?.toInt() as Int ?: 0
+            total += session.responses["prod"]?.toInt() ?: 0
         }
         return (total / sessionsLast7Days.size * 10).toInt()
     }
@@ -45,23 +45,23 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
         var list: MutableList<Int> = mutableListOf()
         var categoriesList: MutableList<String> = mutableListOf()
         sessionsLast7Days.forEach { session ->
-            list.add(session.responses["prod"] as Int * 10)
+            list.add(session.responses["prod"]!!.toInt() * 10)
             categoriesList.add(session.datetime.formatToDayMonth())
         }
         return Pair<List<String>, List<Int>>(categoriesList, list)
     }
 
     fun getProductivityInTheLastSession(): Int {
-        return lastSession.responses["prod"] as Int * 10
+        return lastSession.responses["prod"]!!.toInt() * 10
     }
 
     fun getMusicProductivityInTheLastSession(): Map<String, Int> {
-        var map: MutableMap<String, Pair<Int, Int>> = mutableMapOf() // Pair to keep track of sum and count
+        var map: MutableMap<String, Pair<Int, Int>> = mutableMapOf()
 
         sessionsLast7Days.forEach { session ->
             if (session.responses.containsKey("music")) {
-                val key = (listQuestions.find { q -> q.id =="music"} as Question.MultipleChoiceQuestion).options[session.responses["music"] as Int]
-                val value = session.responses["prod"] as Int * 10
+                val key = session.responses["music"]!!
+                val value = session.responses["prod"]!!.toInt() * 10
 
                 if (map.containsKey(key)) {
                     val (currentSum, count) = map[key]!!
@@ -87,12 +87,12 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
 
         var categoriesList: MutableList<String> = mutableListOf()
         sessionsLast7Days.forEach { session ->
-            productivityList.add(session.responses["prod"] as Int * 10)
+            productivityList.add(session.responses["prod"]!!.toInt() * 10)
             categoriesList.add(session.datetime.formatToDayMonth())
 
             if(session.responses.size >= 6) {
-                sleepList.add(session.responses["sleep"] as Int *10)
-                stressList.add(session.responses["stress"] as Int *10)
+                sleepList.add(session.responses["sleep"]!!.toInt() *10)
+                stressList.add(session.responses["stress"]!!.toInt() *10)
             }
         }
 
@@ -113,21 +113,21 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
 
         sessionsLast7Days.forEach { session ->
             if (session.responses.size >= 6) {
-                val productivity = session.responses["prod"] as Int
+                val productivity = session.responses["prod"]!!.toInt() * 10
 
-                if (session.responses["train"] as Int == 0) {
-                    productivityWhenNotTrained += productivity*10
+                if (session.responses["train"] == "no") {
+                    productivityWhenNotTrained += productivity
                     countWhenNotTrained++
                 } else {
-                    productivityWhenTrained += productivity*10
+                    productivityWhenTrained += productivity
                     countWhenTrained++
                 }
 
-                if (session.responses["cafe"] as Int == 0) {
-                    productivityWhenNoCaffeine += productivity*10
+                if (session.responses["cafe"] == "no") {
+                    productivityWhenNoCaffeine += productivity
                     countWhenNoCaffeine++
                 } else {
-                    productivityWhenCaffeine += productivity*10
+                    productivityWhenCaffeine += productivity
                     countWhenCaffeine++
                 }
             }

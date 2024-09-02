@@ -9,7 +9,7 @@ data class Session(
     val id: String = UUID.randomUUID().toString(),
     val duration: Long,
     val datetime: LocalDateTime = LocalDateTime.now(),
-    val responses: Map<String,Int>,
+    val responses: Map<String,String>,
     val type: String
 )
 
@@ -22,7 +22,7 @@ sealed class Question {
     data class MultipleChoiceQuestion(
         override val id: String = UUID.randomUUID().toString(),
         override val question: String,
-        val options: List<String>,
+        val options: MutableList<String>,
     ) : Question()
 
     @Serializable
@@ -55,7 +55,7 @@ fun hashMapToSession(map: HashMap<String, Any>): Session {
     val responsesMap = map["responses"] as Map<String, Any> // Obtener el mapa como Map<String, Any>
     val convertedResponses = responsesMap.mapValues { (_, value) ->
         // Convertir cada valor a Int, si es Long o si es otro tipo numérico
-        (value as? Number)?.toInt() ?: throw IllegalArgumentException("Invalid number format in responses")
+        (value as? String) ?: throw IllegalArgumentException("Invalid number format in responses")
     }
 
     return Session(

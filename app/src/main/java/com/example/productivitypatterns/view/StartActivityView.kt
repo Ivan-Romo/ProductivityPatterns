@@ -47,7 +47,7 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
     val coroutineScope = rememberCoroutineScope()
     var activityFinished: Boolean by remember { mutableStateOf(false) }
     var questionIndex: Int by remember { mutableStateOf(0) }
-    var answerList: MutableMap<String, Int> = mutableMapOf()
+    var answerList: MutableMap<String, String> = mutableMapOf()
     var addActivity: Boolean by remember { mutableStateOf(false) }
 
     var buttonText = "Start session"
@@ -63,7 +63,7 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
         BoxWithConstraints {
             var constr = this
             if (addActivity) {
-                AddActivity(constr, onCancel = { addActivity = false }, viewModel)
+                AddActivity(constr, onCancel = { addActivity = false }, viewModel, personalViewModel)
             } else {
                 if (!activityFinished) {
                     Column(
@@ -173,7 +173,8 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                                 }
 
                             },
-                            constr = constr
+                            constr = constr,
+                            personalViewModel = personalViewModel,
                         )
 
                         MediumButton(constr, onClick = { activityFinished = false }, buttonText = "Cancel")

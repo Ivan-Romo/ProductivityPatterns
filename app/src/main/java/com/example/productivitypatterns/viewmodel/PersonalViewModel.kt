@@ -38,10 +38,10 @@ class PersonalViewModel(private val context: Context) : ViewModel() {
         return list
     }
 
-    fun getListEnabledQuestions(): List<Question>{
+    fun getListEnabledQuestions(): List<Question> {
         var list = mutableListOf<Question>()
         listQuestions.forEach { question ->
-            if(info.enabledQuestions[question.id]!! && !list.contains(question)){
+            if (info.enabledQuestions[question.id]!! && !list.contains(question)) {
                 list.add(question)
             }
         }
@@ -64,6 +64,34 @@ class PersonalViewModel(private val context: Context) : ViewModel() {
             saveUserPersonalization()
             loadUserPersonalization()
         }
+    }
+
+    fun optionIsCustom(idQuestion: String, option: String): Boolean {
+        if (!info.customAnswers.containsKey(idQuestion)) {
+            return false
+        } else if (info.customAnswers[idQuestion]!!.contains(option)) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    fun deleteCustomOption(idQuestion: String, option: String) {
+        info.customAnswers[idQuestion]!!.remove(option)
+        saveUserPersonalization()
+        loadUserPersonalization()
+    }
+
+    fun addOptionToQuestion(idQuestion: String, newOption: String) {
+
+        if (!info.customAnswers.containsKey(idQuestion)) {
+            info.customAnswers[idQuestion] = mutableListOf(newOption)
+        } else {
+            info.customAnswers[idQuestion]!!.add(newOption)
+        }
+
+        saveUserPersonalization()
+        loadUserPersonalization()
     }
 
     fun saveUserPersonalization() {

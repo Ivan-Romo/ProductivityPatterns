@@ -14,17 +14,18 @@ import com.example.productivitypatterns.components.DisplayQuestion
 import com.example.productivitypatterns.domain.Session
 import com.example.productivitypatterns.ui.theme.InterFontFamily
 import com.example.productivitypatterns.util.listQuestions
+import com.example.productivitypatterns.viewmodel.PersonalViewModel
 import com.example.productivitypatterns.viewmodel.SessionViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Composable
-fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel: SessionViewModel) {
+fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel: SessionViewModel, personalViewModel: PersonalViewModel) {
 
     var questionsMode by remember { mutableStateOf(false) }
     var questionIndex: Int by remember { mutableStateOf(0) }
-    var answerList: MutableMap<String, Int> by remember {  mutableStateOf(mutableMapOf())}
+    var answerList: MutableMap<String, String> by remember {  mutableStateOf(mutableMapOf())}
     var dateTimeCustom: LocalDateTime
 
 
@@ -144,7 +145,8 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel:
                     }
 
                 },
-                constr = constr
+                constr = constr,
+                personalViewModel = personalViewModel
             )
         }
 

@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Personalization(
     val customQuestions: MutableList<Question>,
-    val customAnswers: Map<String,List<String>>,
+    val customAnswers: MutableMap<String,MutableList<String>>,
     val enabledQuestions: MutableMap<String,Boolean>,
     val mode : Boolean
 ){
@@ -15,7 +15,7 @@ data class Personalization(
         fun default(): Personalization {
             return Personalization(
                 customQuestions = mutableListOf(),
-                customAnswers = emptyMap(),
+                customAnswers = mutableMapOf(),
                 enabledQuestions = (listQuestions.associate { it.id to true }).toMutableMap(),
                 mode = false
             )

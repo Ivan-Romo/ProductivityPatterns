@@ -10,7 +10,7 @@ var listQuestions = mutableListOf<Question>(
     Question.MultipleChoiceQuestion(
         id = "music",
         question = "What genre of music have you listened to?",
-        options = listOf(
+        options = mutableListOf(
             "No music",
             "White noise",
             "Lo fi",
@@ -23,7 +23,7 @@ var listQuestions = mutableListOf<Question>(
     Question.MultipleChoiceQuestion(
         id = "location",
         question = "Where was the session?",
-        options = listOf(
+        options = mutableListOf(
             "Café",
             "Office",
             "Home",
