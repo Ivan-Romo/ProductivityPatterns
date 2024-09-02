@@ -52,7 +52,7 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
 
     var buttonText = "Start session"
 
-    var aboveButtonText = "Lorem ipsum dolor sit amet."
+    var aboveButtonText = "Choose activity type"
 
     if (started) {
         buttonText = "Stop"
@@ -128,22 +128,7 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                                 minLines = 2,
                             )
 
-                            BigButton(
-                                constr, onClick = {
-                                    started = !started
-                                    if (started) {
-                                        coroutineScope.launch {
-                                            while (started) {
-                                                delay(1000L)
-                                                timerState.value += 1
-                                            }
-                                        }
-                                    } else if (!activityFinished) {
-                                        activityFinished = true
-                                    }
-                                },
-                                buttonText = buttonText
-                            )
+
                         }
 
 

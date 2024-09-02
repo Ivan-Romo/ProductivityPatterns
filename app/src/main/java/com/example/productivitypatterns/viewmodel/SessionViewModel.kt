@@ -38,13 +38,9 @@ class SessionViewModel : ViewModel() {
                     if (document != null && document.exists()) {
                         val sessions = document.get("sessions") as List<HashMap<String, Any>>
 
-
-                        // Convertimos la lista de HashMaps a una lista de objetos Session
                         val sessionList = sessions.map { sessionMap ->
                             hashMapToSession(sessionMap)
                         }
-
-                        // Actualizamos el estado de _sessionList
                         _sessionList.value = sessionList
 
                     } else {

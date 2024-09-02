@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,7 +38,10 @@ fun PersonalView(viewModel: PersonalViewModel) {
             // Estado para controlar la visibilidad del diálogo
             var showDialog by remember { mutableStateOf(false) }
             var enabledQuestionsData by remember { mutableStateOf(viewModel.getListQuestionsAndEnabled()) }
-            LaunchedEffect(viewModel.info) {
+            LaunchedEffect(viewModel.info.enabledQuestions) {
+                enabledQuestionsData = viewModel.getListQuestionsAndEnabled()
+            }
+            LaunchedEffect(viewModel.info.customQuestions) {
                 enabledQuestionsData = viewModel.getListQuestionsAndEnabled()
             }
 
@@ -68,7 +74,7 @@ fun PersonalView(viewModel: PersonalViewModel) {
                         )
 
                         enabledQuestionsData.forEach { question ->
-                            if(question.first.id!= "prod") {
+                            if (question.first.id != "prod") {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.fillMaxWidth()
@@ -82,6 +88,19 @@ fun PersonalView(viewModel: PersonalViewModel) {
                                             .weight(1f)
                                             .padding(end = 10.dp)
                                     )
+                                    if (viewModel.info.customQuestions.find { quest -> quest.id == question.first.id } != null) {
+                                        IconButton(
+                                            onClick = {
+                                                viewModel.deleteCustomQuestion(question.first.id)
+                                                enabledQuestionsData = viewModel.getListQuestionsAndEnabled()
+                                            }
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Outlined.Delete,
+                                                contentDescription = "Delete Question"
+                                            )
+                                        }
+                                    }
                                     Checkbox(
                                         checked = isChecked,
                                         onCheckedChange = {
@@ -119,64 +138,83 @@ fun PersonalView(viewModel: PersonalViewModel) {
                     text = {
                         BoxWithConstraints {
                             var constr2 = this
-                            Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.SpaceBetween) {
-                                if(type==null) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .verticalScroll(rememberScrollState()),
+                                verticalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                if (type == null) {
                                     Text("Question type")
                                     Spacer(modifier = Modifier.height(8.dp))
-                                    MediumButton(constr2, width = constr.maxWidth * 0.9f, buttonText = "Yes or No", onClick = { type = "yesno" })
-                                    MediumButton(constr2, width = constr.maxWidth * 0.9f, buttonText = "Multiple Choice", onClick = { type = "multiple" })
-                                    MediumButton(constr2, width = constr.maxWidth * 0.9f, buttonText = "1 to 10", onClick = { type = "rating" })
-                                }
-                                else if(!questionEntered) {
+                                    MediumButton(
+                                        constr2,
+                                        width = constr.maxWidth * 0.9f,
+                                        buttonText = "Yes or No",
+                                        onClick = { type = "yesno" })
+                                    MediumButton(
+                                        constr2,
+                                        width = constr.maxWidth * 0.9f,
+                                        buttonText = "Multiple Choice",
+                                        onClick = { type = "multiple" })
+                                    MediumButton(
+                                        constr2,
+                                        width = constr.maxWidth * 0.9f,
+                                        buttonText = "1 to 10",
+                                        onClick = { type = "rating" })
+                                } else if (!questionEntered) {
                                     Text("Question text")
                                     TextField(
                                         value = question ?: "",
                                         onValueChange = { newText -> question = newText },
                                         label = { Text("Enter your custom question") }
                                     )
-                                }
-                                else if(type=="multiple") {
+                                } else if (type == "multiple") {
                                     textFields.forEachIndexed { index, text ->
                                         TextField(
                                             value = text,
                                             onValueChange = { newText ->
-                                                // Actualizar el estado del TextField en el índice correspondiente
                                                 textFields = textFields.toMutableList().apply { this[index] = newText }
                                             },
                                             label = { Text("Campo de texto ${index + 1}") },
-                                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(vertical = 8.dp)
                                         )
                                     }
 
-                                    MediumButton(constr2, width = constr.maxWidth * 0.9f, buttonText = "Add more option",onClick = {
-                                        // Agregar un nuevo campo de texto a la lista
-                                        textFields = textFields + ""
-                                    },)
+                                    MediumButton(
+                                        constr2, width = constr.maxWidth * 0.9f, buttonText = "Add more option",
+                                        onClick = {
+                                            textFields = textFields + ""
+                                        },
+                                    )
 
                                 }
                             }
                         }
                     },
                     confirmButton = {
-                        if(type==null) {
-                        }
-                        else if((!questionEntered && type!="multiple") || questionEntered) {
+                        if (type == null) {
+                        } else if ((!questionEntered && type != "multiple") || questionEntered) {
                             Button(
                                 onClick = {
                                     showDialog = false
 
                                     var quest: Question? = null
 
-                                    if(type=="yesno"){
-                                        quest = Question.YesNoQuestion(question= question ?:"")
-                                    }
-                                    else if(type=="rating"){
+                                    if (type == "yesno") {
+                                        quest = Question.YesNoQuestion(question = question ?: "")
+                                    } else if (type == "rating") {
                                         quest = Question.RatingQuestion(question = question ?: "")
-                                    }else if(type=="multiple"){
-                                        quest = Question.MultipleChoiceQuestion(question = question ?: "", options = textFields.toMutableList())
+                                    } else if (type == "multiple") {
+                                        quest = Question.MultipleChoiceQuestion(
+                                            question = question ?: "",
+                                            options = textFields.toMutableList()
+                                        )
                                     }
 
-                                    if(quest != null){
+                                    if (quest != null) {
                                         viewModel.addCustomQuestion(quest)
                                     }
 
@@ -184,8 +222,7 @@ fun PersonalView(viewModel: PersonalViewModel) {
                             ) {
                                 Text("Add")
                             }
-                        }
-                        else{
+                        } else {
                             Button(
                                 onClick = {
                                     questionEntered = true

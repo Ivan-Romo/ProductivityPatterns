@@ -17,6 +17,7 @@ import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.domain.Personalization
 import com.example.productivitypatterns.viewmodel.AuthState
 import com.example.productivitypatterns.viewmodel.AuthViewModel
+import com.example.productivitypatterns.viewmodel.PersonalViewModel
 import com.example.productivitypatterns.viewmodel.SessionViewModel
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -28,7 +29,8 @@ fun DevelopView(
     modifier: Modifier = Modifier,
     navController: NavController,
     authViewModel: AuthViewModel,
-    sessionViewModel: SessionViewModel = viewModel()
+    sessionViewModel: SessionViewModel = viewModel(),
+    personalViewModel: PersonalViewModel
 ) {
     var context = LocalContext.current
     val authState = authViewModel.authState.observeAsState()
@@ -56,22 +58,9 @@ fun DevelopView(
         ) {
             Text(text = "Home Page", fontSize = 32.sp)
 
-            MediumButton(constr, buttonText = "Save", onClick = {
-                val json = Json.encodeToString(userAux)
-                val file = File(context.filesDir, "user_data.json")
-                file.writeText(json)
-
+            MediumButton(constr, buttonText = "Reset", onClick = {
+               personalViewModel.resetData()
             })
-            MediumButton(constr, buttonText = "Load", onClick = {
-
-                val file = File(context.filesDir, "user_data.json")
-                if (file.exists()) {
-                    val json = file.readText()
-
-                    data = Json.decodeFromString<Personalization>(json)
-                }
-            })
-
             if(data!=null){
                 Text(data!!.customQuestions.toString())
             }

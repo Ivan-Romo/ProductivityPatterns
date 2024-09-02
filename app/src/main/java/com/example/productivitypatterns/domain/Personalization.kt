@@ -9,6 +9,7 @@ data class Personalization(
     val customQuestions: MutableList<Question>,
     val customAnswers: MutableMap<String,MutableList<String>>,
     val enabledQuestions: MutableMap<String,Boolean>,
+    val activityTypes: MutableList<String>,
     val mode : Boolean
 ){
     companion object {
@@ -17,6 +18,7 @@ data class Personalization(
                 customQuestions = mutableListOf(),
                 customAnswers = mutableMapOf(),
                 enabledQuestions = (listQuestions.associate { it.id to true }).toMutableMap(),
+                activityTypes = mutableListOf(),
                 mode = false
             )
         }

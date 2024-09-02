@@ -28,11 +28,28 @@ class PersonalViewModel(private val context: Context) : ViewModel() {
         }
     }
 
+    fun deleteCustomQuestion(id: String) {
+        var question = listQuestions.find { quest -> quest.id == id }
+        if(question != null) {
+            listQuestions.remove(question)
+            info.customQuestions.remove(question)
+            if(info.customQuestions.contains(question)) {
+                info.customAnswers.remove(question.id)
+            }
+            info.enabledQuestions.remove(question.id)
+
+            saveUserPersonalization()
+            loadUserPersonalization()
+        }
+    }
+
     fun getListQuestionsAndEnabled(): List<Pair<Question, Boolean>> {
         var list = mutableListOf<Pair<Question, Boolean>>()
         listQuestions.forEach { question ->
-            if (!list.contains(Pair(question, info.enabledQuestions[question.id]!!))) {
-                list.add(Pair(question, info.enabledQuestions[question.id]!!))
+            if(info.enabledQuestions.contains(question.id)) {
+                if (!list.contains(Pair(question, info.enabledQuestions[question.id]))) {
+                    list.add(Pair(question, info.enabledQuestions[question.id]!!))
+                }
             }
         }
         return list
@@ -110,6 +127,14 @@ class PersonalViewModel(private val context: Context) : ViewModel() {
                 listQuestions.add(question)
             }
         }
+    }
+
+    fun resetData(){
+        val json = Json.encodeToString(Personalization.default())
+        val file = File(context.filesDir, "user_data.json")
+        file.writeText(json)
+
+        loadUserPersonalization()
     }
 
 }
