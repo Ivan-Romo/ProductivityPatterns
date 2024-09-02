@@ -3,7 +3,9 @@ package com.example.productivitypatterns.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
@@ -19,6 +21,8 @@ import com.example.productivitypatterns.components.Buttons.BigButton
 import com.example.productivitypatterns.components.Buttons.MediumButton
 import com.example.productivitypatterns.components.DisplayQuestion
 import com.example.productivitypatterns.components.Buttons.SmallButton
+import com.example.productivitypatterns.components.TypeDropdown
+import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.domain.Session
 import com.example.productivitypatterns.ui.theme.*
 import com.example.productivitypatterns.util.formatTime
@@ -40,6 +44,7 @@ import java.util.*
 //87NsxfU8VrPqQg4eeDxnaWuHsXy2
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalViewModel) {
     var started: Boolean by remember { mutableStateOf(false) }
@@ -49,10 +54,11 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
     var questionIndex: Int by remember { mutableStateOf(0) }
     var answerList: MutableMap<String, String> = mutableMapOf()
     var addActivity: Boolean by remember { mutableStateOf(false) }
+    var type: String by remember { mutableStateOf(viewModel.getLastSessionType()) }
 
     var buttonText = "Start session"
 
-    var aboveButtonText = "Choose activity type"
+    var aboveButtonText = "Lorem ipsum dolor sit amet."
 
     if (started) {
         buttonText = "Stop"
@@ -63,7 +69,12 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
         BoxWithConstraints {
             var constr = this
             if (addActivity) {
-                AddActivity(constr, onCancel = { addActivity = false }, viewModel, personalViewModel)
+                AddActivity(constr, onCancel = {
+                    addActivity = false
+                    started = false
+                    questionIndex = 0
+                    activityFinished = false
+                }, viewModel, personalViewModel)
             } else {
                 if (!activityFinished) {
                     Column(
@@ -127,11 +138,8 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                                 fontFamily = InterFontFamily,
                                 minLines = 2,
                             )
-
-
+                            TypeDropdown(personalViewModel, onChangeType = {type = it})
                         }
-
-
                     }
                 } else {
                     Column(
@@ -144,11 +152,11 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                         DisplayQuestion(
                             questionList[questionIndex],
                             onReply = {
-                                answerList[questionList[questionIndex].id]=  it
+                                answerList[questionList[questionIndex].id] = it
                                 questionIndex++
                                 if (questionIndex >= questionList.size) {
                                     var session =
-                                        Session(duration = timerState.value, responses = answerList, type = "TODO")
+                                        Session(duration = timerState.value, responses = answerList, type = type)
                                     viewModel.createSession(session)
 
                                     started = false
@@ -156,13 +164,18 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                                     questionIndex = 0
                                     activityFinished = false
                                 }
-
                             },
                             constr = constr,
                             personalViewModel = personalViewModel,
                         )
 
-                        MediumButton(constr, onClick = { activityFinished = false }, buttonText = "Cancel")
+                        MediumButton(constr, onClick = {
+                            activityFinished = false
+                            addActivity = false
+                            started = false
+                            questionIndex = 0
+                            activityFinished = false
+                        }, buttonText = "Cancel")
                     }
                 }
             }

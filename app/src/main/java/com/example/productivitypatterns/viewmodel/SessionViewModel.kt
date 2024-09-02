@@ -29,6 +29,15 @@ class SessionViewModel : ViewModel() {
         getSessionList()
     }
 
+    fun getLastSessionType(): String{
+        if(_sessionList.value.isEmpty()){
+            return ""
+        }
+        else {
+            return _sessionList.value.last().type
+        }
+    }
+
     private fun getSessionList() {
         if (userId != null) {
             val userSessionsDocRef = db.collection("sessions").document(userId)

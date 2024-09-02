@@ -137,4 +137,12 @@ class PersonalViewModel(private val context: Context) : ViewModel() {
         loadUserPersonalization()
     }
 
+    fun addActivityType(type:String){
+        if(!info.activityTypes.contains(type)) {
+            info.activityTypes.add(type)
+            saveUserPersonalization()
+            loadUserPersonalization()
+        }
+    }
+
 }
