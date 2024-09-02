@@ -68,26 +68,28 @@ fun PersonalView(viewModel: PersonalViewModel) {
                         )
 
                         enabledQuestionsData.forEach { question ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                var isChecked by remember { mutableStateOf(question.second) }
-                                Text(
-                                    question.first.question,
-                                    textAlign = TextAlign.Left,
-                                    textDecoration = if (!isChecked) TextDecoration.LineThrough else null,
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .padding(end = 10.dp)
-                                )
-                                Checkbox(
-                                    checked = isChecked,
-                                    onCheckedChange = {
-                                        isChecked = it
-                                        viewModel.changeEnabled(question.first.id)
-                                    }
-                                )
+                            if(question.first.id!= "prod") {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    var isChecked by remember { mutableStateOf(question.second) }
+                                    Text(
+                                        question.first.question,
+                                        textAlign = TextAlign.Left,
+                                        textDecoration = if (!isChecked) TextDecoration.LineThrough else null,
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .padding(end = 10.dp)
+                                    )
+                                    Checkbox(
+                                        checked = isChecked,
+                                        onCheckedChange = {
+                                            isChecked = it
+                                            viewModel.changeEnabled(question.first.id)
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
