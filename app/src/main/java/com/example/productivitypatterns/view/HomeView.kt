@@ -135,7 +135,7 @@ fun Home(
                     DevelopView(modifier, auxNavController, authViewModel)
                 }
                 composable("WeekStats") {
-                    WeekStatsView(StatsViewModel(sessionViewModel))
+                    WeekStatsView(StatsViewModel(sessionViewModel), personalViewModel)
                 }
                 composable("Personal") {
                    PersonalView(personalViewModel)

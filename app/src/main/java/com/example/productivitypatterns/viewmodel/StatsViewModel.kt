@@ -1,10 +1,8 @@
 package com.example.productivitypatterns.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.domain.Session
 import com.example.productivitypatterns.util.formatToDayMonth
-import com.example.productivitypatterns.util.listQuestions
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import java.util.UUID
@@ -80,65 +78,74 @@ class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
         return averagedMap
     }
 
-    fun getStressAndSleepOfEachSessionInTheLast7Days(): Pair<List<String>, List<List<Int>>> {
-        var productivityList: MutableList<Int> = mutableListOf()
-        var sleepList: MutableList<Int> = mutableListOf()
-        var stressList: MutableList<Int> = mutableListOf()
-
-        var categoriesList: MutableList<String> = mutableListOf()
-        sessionsLast7Days.forEach { session ->
-            productivityList.add(session.responses["prod"]!!.toInt() * 10)
-            categoriesList.add(session.datetime.formatToDayMonth())
-
-            if(session.responses.size >= 6) {
-                sleepList.add(session.responses["sleep"]!!.toInt() *10)
-                stressList.add(session.responses["stress"]!!.toInt() *10)
-            }
-        }
-
-        var list: List<List<Int>> = listOf(productivityList, sleepList, stressList)
-        return Pair<List<String>, List<List<Int>>>(categoriesList, list)
-    }
-
-
-    fun getCaffeineAndTrainingOfEachSessionInTheLast7Days(): List<Int>{
-        var productivityWhenTrained = 0
-        var countWhenTrained = 0
-        var productivityWhenNotTrained = 0
-        var countWhenNotTrained = 0
-        var productivityWhenCaffeine = 0
-        var countWhenCaffeine = 0
-        var productivityWhenNoCaffeine = 0
-        var countWhenNoCaffeine = 0
+    fun getYesNoStats(idQuestion: String, type: String): Pair<Int, Int> {
+        var yesProductivity = 0;
+        var yesCount = 0
+        var noProductivity = 0;
+        var noCount = 0
 
         sessionsLast7Days.forEach { session ->
-            if (session.responses.size >= 6) {
+            if (session.type == type) {
                 val productivity = session.responses["prod"]!!.toInt() * 10
-
-                if (session.responses["train"] == "no") {
-                    productivityWhenNotTrained += productivity
-                    countWhenNotTrained++
+                if (session.responses[idQuestion] == "no") {
+                    noProductivity += productivity
+                    noCount++
                 } else {
-                    productivityWhenTrained += productivity
-                    countWhenTrained++
-                }
-
-                if (session.responses["cafe"] == "no") {
-                    productivityWhenNoCaffeine += productivity
-                    countWhenNoCaffeine++
-                } else {
-                    productivityWhenCaffeine += productivity
-                    countWhenCaffeine++
+                    yesProductivity += productivity
+                    yesCount++
                 }
             }
         }
 
-        val averageWhenTrained = if (countWhenTrained > 0) productivityWhenTrained / countWhenTrained else 0
-        val averageWhenNotTrained = if (countWhenNotTrained > 0) productivityWhenNotTrained / countWhenNotTrained else 0
-        val averageWhenCaffeine = if (countWhenCaffeine > 0) productivityWhenCaffeine / countWhenCaffeine else 0
-        val averageWhenNoCaffeine = if (countWhenNoCaffeine > 0) productivityWhenNoCaffeine / countWhenNoCaffeine else 0
-
-        return listOf(averageWhenTrained, averageWhenNotTrained, averageWhenCaffeine, averageWhenNoCaffeine)
+        val averageWhenYes = if (yesCount > 0) yesProductivity / yesCount else 0
+        val averageWhenNo = if (noCount > 0) noProductivity / noCount else 0
+        return Pair(averageWhenYes, averageWhenNo)
     }
+
+    fun getRatingStats(idQuestion: String, type: String): Pair<List<String>, Pair<List<Int>, List<Int>>> {
+        val productivityList: MutableList<Int> = mutableListOf()
+        val ratingList: MutableList<Int> = mutableListOf()
+        val categoriesList: MutableList<String> = mutableListOf()
+        sessionsLast7Days.forEach { session ->
+            if(session.type == type) {
+                productivityList.add(session.responses["prod"]!!.toInt() * 10)
+                categoriesList.add(session.datetime.formatToDayMonth())
+
+                if (session.responses.containsKey(idQuestion)) {
+                    ratingList.add(session.responses[idQuestion]!!.toInt() * 10)
+                }
+            }
+        }
+
+        val list: Pair<List<Int>, List<Int>> = Pair(productivityList, ratingList)
+        return Pair<List<String>, Pair<List<Int>, List<Int>>>(categoriesList, list)
+    }
+
+    fun getMultipleStats(idQuestion: String, type: String): Map<String, Int> {
+        var map: MutableMap<String, Pair<Int, Int>> = mutableMapOf()
+
+        sessionsLast7Days.forEach { session ->
+            if(session.type == type) {
+                if (session.responses.containsKey(idQuestion)) {
+                    val key = session.responses[idQuestion]!!
+                    val value = session.responses["prod"]!!.toInt() * 10
+                    if (map.containsKey(key)) {
+                        val (currentSum, count) = map[key]!!
+                        map[key] = Pair(currentSum + value, count + 1)
+                    } else {
+
+                        map[key] = Pair(value, 1)
+                    }
+                }
+            }
+        }
+        val averagedMap: MutableMap<String, Int> = mutableMapOf()
+        map.forEach { (key, value) ->
+            val (sum, count) = value
+            averagedMap[key] = sum / count
+        }
+        return averagedMap
+    }
+
 
 }

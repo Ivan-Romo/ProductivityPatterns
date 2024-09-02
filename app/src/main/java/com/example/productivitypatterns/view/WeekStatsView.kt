@@ -18,11 +18,14 @@ import androidx.compose.ui.unit.dp
 import com.example.productivitypatterns.components.charts.BarChart
 import com.example.productivitypatterns.components.charts.LineChart
 import com.example.productivitypatterns.components.charts.RadialCircleChart
+import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.ui.theme.*
+import com.example.productivitypatterns.util.listQuestions
+import com.example.productivitypatterns.viewmodel.PersonalViewModel
 import com.example.productivitypatterns.viewmodel.StatsViewModel
 
 @Composable
-fun WeekStatsView(statsViewModel: StatsViewModel) {
+fun WeekStatsView(statsViewModel: StatsViewModel, personalViewModel: PersonalViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -30,9 +33,9 @@ fun WeekStatsView(statsViewModel: StatsViewModel) {
     ) {
         BoxWithConstraints {
             var constr = this
+            var type = "TODO"
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
+                horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
                     //.background(Color.White)
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
@@ -75,190 +78,115 @@ fun WeekStatsView(statsViewModel: StatsViewModel) {
                                 "Average"
                             )
                             RadialCircleChart(
-                                statsViewModel.getProductivityInTheLastSession(),
-                                BlueChartsCode,
-                                BlueChartsCode,
-                                "Last"
+                                statsViewModel.getProductivityInTheLastSession(), BlueChartsCode, BlueChartsCode, "Last"
                             )
                         }
                         val prodData = statsViewModel.getProductivityOfEachSessionInTheLast7Days()
                         LineChart(
                             listOf(
                                 "Productivity" to prodData.second,
-                            ),
-                            prodData.first,
-                            listOf(BlueChartsCode)
+                            ), prodData.first, listOf(BlueChartsCode)
                         )
                     }
 
                 }
 
-                Box(
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .width(constr.maxWidth * 0.9f)
-                        .shadow(8.dp, RoundedCornerShape(16.dp)) // Elevación con bordes redondeados
-                        .clip(RoundedCornerShape(16.dp)) // Recorte para asegurar los bordes redondeados
-                        .background(Color.White)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .padding(20.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                "Music & productivity",
-                                textAlign = TextAlign.Left,
-                                fontFamily = InterFontFamily
-                            )
+
+                personalViewModel.info.enabledQuestions.forEach { question ->
+                    if (question.value && question.key != "prod") {
+                        val questFromList = listQuestions.find { quest -> quest.id == question.key }
+                        val questFromCustom =
+                            personalViewModel.info.customQuestions.find { quest -> quest.id == question.key }
+                        if (questFromList != null || questFromCustom != null) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(top = 16.dp)
+                                    .width(constr.maxWidth * 0.9f)
+                                    .shadow(8.dp, RoundedCornerShape(16.dp))
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(Color.White)
+                            ) {
+
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .padding(20.dp)
+                                        .fillMaxWidth()
+                                ) {
+                                    if ((questFromList is Question.YesNoQuestion) || (questFromCustom is Question.YesNoQuestion)) {
+                                        var data = statsViewModel.getYesNoStats(question.key, type)
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Start,
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Text(
+                                                questFromList?.question ?: questFromCustom!!.id,
+                                                textAlign = TextAlign.Left,
+                                                fontFamily = InterFontFamily
+                                            )
+                                        }
+
+                                        Row(
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(start = 5.dp, end = 5.dp, top = 5.dp)
+                                        ) {
+                                            RadialCircleChart(
+                                                data.second, BlueChartsCode, BlueChartsCode, "Yes"
+                                            )
+                                            RadialCircleChart(
+                                                data.second, BlueChartsCode, BlueChartsCode, "No"
+                                            )
+
+                                        }
+
+                                    } else if ((questFromList is Question.RatingQuestion) || (questFromCustom is Question.RatingQuestion)) {
+
+                                        var data = statsViewModel.getRatingStats(question.key, type)
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Start,
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Text(
+                                                questFromList?.question ?: questFromCustom!!.id,
+                                                textAlign = TextAlign.Left,
+                                                fontFamily = InterFontFamily
+                                            )
+                                        }
+
+                                        LineChart(
+                                            listOf(
+                                                "Productivity" to data.second.first,
+                                                "Answer" to data.second.second,
+                                            ), data.first, listOf(BlueChartsCode, GreenChartsCode)
+                                        )
+                                    } else if ((questFromList is Question.MultipleChoiceQuestion) || (questFromCustom is Question.MultipleChoiceQuestion)) {
+                                        var data = statsViewModel.getMultipleStats(question.key, type)
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Start,
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Text(
+                                                questFromList?.question ?: questFromCustom!!.id,
+                                                textAlign = TextAlign.Left,
+                                                fontFamily = InterFontFamily
+                                            )
+                                        }
+                                        BarChart(
+                                            categories = data.keys.toList(),
+                                            values = data.values.toList(),
+                                            barColor = BlueChartsCode,
+                                        )
+                                    }
+                                }
+                            }
                         }
-                        val prodData = statsViewModel.getMusicProductivityInTheLastSession()
-                            BarChart(
-                                categories = prodData.keys.toList(),
-                                values = prodData.values.toList(),
-                                barColor = BlueChartsCode,
-                            )
-
-
                     }
                 }
-
-                Box(
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .width(constr.maxWidth * 0.9f)
-                        .shadow(8.dp, RoundedCornerShape(16.dp)) // Elevación con bordes redondeados
-                        .clip(RoundedCornerShape(16.dp)) // Recorte para asegurar los bordes redondeados
-                        .background(Color.White)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .padding(20.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                "Sleep & Stress",
-                                textAlign = TextAlign.Left,
-                                fontFamily = InterFontFamily
-                            )
-                        }
-                        val prodData = statsViewModel.getStressAndSleepOfEachSessionInTheLast7Days()
-                        LineChart(
-                            listOf(
-                                "Productivity" to prodData.second[0],
-                                "Stress" to prodData.second[2],
-                            ),
-                            prodData.first,
-                            listOf(BlueChartsCode, GreenChartsCode)
-                        )
-                        LineChart(
-                            listOf(
-                                "Productivity" to prodData.second[0],
-                                "Sleep" to prodData.second[1],
-                            ),
-                            prodData.first,
-                            listOf(BlueChartsCode, GreenChartsCode)
-                        )
-
-
-                    }
-                }
-
-                Box(
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .width(constr.maxWidth * 0.9f)
-                        .shadow(8.dp, RoundedCornerShape(16.dp)) // Elevación con bordes redondeados
-                        .clip(RoundedCornerShape(16.dp)) // Recorte para asegurar los bordes redondeados
-                        .background(Color.White)
-                ) {
-
-                    var prodData = statsViewModel.getCaffeineAndTrainingOfEachSessionInTheLast7Days()
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .padding(20.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                "Training",
-                                textAlign = TextAlign.Left,
-                                fontFamily = InterFontFamily
-                            )
-                        }
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 5.dp, end = 5.dp, top = 5.dp)
-                        ) {
-                            RadialCircleChart(
-                                prodData[0],
-                                BlueChartsCode,
-                                BlueChartsCode,
-                                "Yes"
-                            )
-                            RadialCircleChart(
-                                prodData[1],
-                                BlueChartsCode,
-                                BlueChartsCode,
-                                "No"
-                            )
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                "Caffeine",
-                                textAlign = TextAlign.Left,
-                                fontFamily = InterFontFamily
-                            )
-                        }
-
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 5.dp, end = 5.dp, top = 5.dp)
-                        ) {
-                            RadialCircleChart(
-                                prodData[2],
-                                BlueChartsCode,
-                                BlueChartsCode,
-                                "Yes"
-                            )
-                            RadialCircleChart(
-                                prodData[3],
-                                BlueChartsCode,
-                                BlueChartsCode,
-                                "No"
-                            )
-                        }
-
-                    }
-
-                }
-
-
             }
         }
     }
