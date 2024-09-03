@@ -47,7 +47,6 @@ fun WeekStatsView(statsViewModel: StatsViewModel, personalViewModel: PersonalVie
                 key(type) {
                     StatsContent(type = type, statsViewModel, personalViewModel, constr)
                 }
-
             }
         }
     }

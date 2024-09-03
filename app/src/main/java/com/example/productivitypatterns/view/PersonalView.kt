@@ -35,13 +35,9 @@ fun PersonalView(viewModel: PersonalViewModel) {
         BoxWithConstraints {
             var constr = this
 
-            // Estado para controlar la visibilidad del diálogo
             var showDialog by remember { mutableStateOf(false) }
             var enabledQuestionsData by remember { mutableStateOf(viewModel.getListQuestionsAndEnabled()) }
-            LaunchedEffect(viewModel.info.enabledQuestions) {
-                enabledQuestionsData = viewModel.getListQuestionsAndEnabled()
-            }
-            LaunchedEffect(viewModel.info.customQuestions) {
+            LaunchedEffect(viewModel.info.enabledQuestions, viewModel.info.customQuestions) {
                 enabledQuestionsData = viewModel.getListQuestionsAndEnabled()
             }
 
@@ -72,6 +68,7 @@ fun PersonalView(viewModel: PersonalViewModel) {
                             fontWeight = FontWeight.Bold,
                             fontFamily = InterFontFamily
                         )
+
 
                         enabledQuestionsData.forEach { question ->
                             if (question.first.id != "prod") {
@@ -216,6 +213,7 @@ fun PersonalView(viewModel: PersonalViewModel) {
 
                                     if (quest != null) {
                                         viewModel.addCustomQuestion(quest)
+                                        enabledQuestionsData = viewModel.getListQuestionsAndEnabled()
                                     }
 
                                 }

@@ -17,11 +17,13 @@ data class Session(
 sealed class Question {
     abstract val id: String
     abstract val question: String
+    abstract val title: String?
 
     @Serializable
     data class MultipleChoiceQuestion(
         override val id: String = UUID.randomUUID().toString(),
         override val question: String,
+        override val title: String? = "",
         val options: MutableList<String>,
     ) : Question()
 
@@ -29,12 +31,14 @@ sealed class Question {
     data class YesNoQuestion(
         override val id: String = UUID.randomUUID().toString(),
         override val question: String,
+        override val title: String? = "",
     ) : Question()
 
     @Serializable
     data class RatingQuestion(
         override val id: String = UUID.randomUUID().toString(),
         override val question: String,
+        override val title: String? = "",
     ) : Question()
 }
 
