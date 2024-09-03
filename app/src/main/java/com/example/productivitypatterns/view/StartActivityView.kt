@@ -1,5 +1,6 @@
 package com.example.productivitypatterns.view
 
+import android.content.res.Resources.Theme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,7 +67,7 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
         aboveButtonText = "Concentrate"
     }
 
-    Surface(color = Background, modifier = Modifier.fillMaxSize()) {
+    Surface(color = colorScheme.background, modifier = Modifier.fillMaxSize()) {
         BoxWithConstraints {
             var constr = this
             if (addActivity) {
@@ -91,7 +93,7 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                                 .size(300.dp)
                                 .shadow(8.dp, CircleShape, clip = false) // Aplica la sombra sin afectar el recorte
                                 .clip(CircleShape) // Recorta en forma de círculo
-                                .background(Color.White)
+                                .background(colorScheme.surface)
                                 .clickable {
 
                                     started = !started

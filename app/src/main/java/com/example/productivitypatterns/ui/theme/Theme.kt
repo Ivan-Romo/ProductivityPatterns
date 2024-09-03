@@ -13,20 +13,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
-    background = Color(0xFFF5F6FD),
+    primary =  Color(0xFF3343E0),
+    secondary = Color.Yellow,
+    secondaryContainer = Color(0xFF3343E0), //fondo de los iconos
+    surfaceContainer = Color.Red,
+    primaryContainer = Color.Yellow,
+    onSurfaceVariant = Color.Black, //iconos sin seleccionar y texto de dropdown unfocused
+    background =Color(0xFFF5F6FD),
     surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-
+    tertiaryContainer = Color.Yellow,
 )
 
 @Composable
@@ -39,7 +37,7 @@ fun ProductivityPatternsTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme) DarkColorScheme else LightColorScheme
         }
 
         darkTheme -> DarkColorScheme

@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -79,7 +80,7 @@ fun Home(
     }
 
     Surface(
-        modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
+        modifier = Modifier.fillMaxSize(), color = colorScheme.background
     ) {
         Scaffold(topBar = {
             CenterAlignedTopAppBar(
@@ -119,6 +120,7 @@ fun Home(
                                     item.icon
                                 } else item.unselectedIcon,
                                 contentDescription = item.title,
+                                tint = if (index == selectedItemIndex) {colorScheme.background} else colorScheme.onSurface
                             )
                         }
                     })
