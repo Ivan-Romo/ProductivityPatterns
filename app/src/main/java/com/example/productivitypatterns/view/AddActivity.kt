@@ -3,6 +3,7 @@ package com.example.productivitypatterns.view
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -92,7 +93,8 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel:
                         "Select date"
                     } else {
                         "Date : $selectedDate"
-                    }
+                    },
+                    colorScheme = colorScheme
                 )
 
                 MediumButton(
@@ -101,7 +103,8 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel:
                         "Select start time"
                     } else {
                         "Start time: $selectedStartTime"
-                    }
+                    },
+                    colorScheme = colorScheme
                 )
 
                 MediumButton(
@@ -110,13 +113,15 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel:
                         "Select end time"
                     } else {
                         "End time: $selectedEndTime"
-                    }
+                    },
+                    colorScheme = colorScheme
                 )
 
                 MediumButton(
                     constr,
                     onClick = { questionsMode = true },
-                    "Continue"
+                    "Continue",
+                    colorScheme = colorScheme
                 )
 
             }
@@ -150,7 +155,8 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel:
             )
         }
 
-        MediumButton(constr, onClick = { onCancel() }, buttonText = "Cancel")
+        MediumButton(constr, onClick = { onCancel() }, buttonText = "Cancel",
+            colorScheme = colorScheme)
     }
 }
 

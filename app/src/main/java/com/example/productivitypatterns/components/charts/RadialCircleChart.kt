@@ -19,7 +19,8 @@ fun RadialCircleChart(
     chartColor: String,
     textColor: String,
     textLabel:String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    backgroundColor: String
 ) {
     val htmlContent = """
 <!DOCTYPE html>
@@ -62,7 +63,7 @@ fun RadialCircleChart(
                   hollow: {
                       margin: 0,
                       size: '70%',
-                      background: '#fff',
+                      background: '$backgroundColor',
                       image: undefined,
                       imageOffsetX: 0,
                       imageOffsetY: 0,
@@ -138,7 +139,7 @@ fun RadialCircleChart(
                     } else {
                         setLayerType(LAYER_TYPE_SOFTWARE, null)
                     }
-
+                    setBackgroundColor(0x00000000)
                     webViewClient = WebViewClient()
                     webChromeClient = WebChromeClient()
                     settings.javaScriptEnabled = true

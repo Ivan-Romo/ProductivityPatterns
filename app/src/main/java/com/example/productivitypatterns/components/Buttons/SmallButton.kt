@@ -1,14 +1,13 @@
 package com.example.productivitypatterns.components.Buttons
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,39 +22,70 @@ fun SmallButton(
     icon: ImageVector? = null,
     text: String = "",
     onClick: () -> Unit = {},
-    size: Float = 0.115f
+    size: Float = 0.115f,
+    colorScheme: ColorScheme // El esquema de colores se pasa como parámetro
 ) {
-    ElevatedButton(
-        elevation = ButtonDefaults.elevatedButtonElevation(
-            defaultElevation = 10.dp, pressedElevation = 10.dp, disabledElevation = 4.dp
-        ),
-        onClick = {
-            onClick()
-        },
-        shape = RoundedCornerShape(16),
-        modifier = Modifier
-            .padding(top = constr.maxWidth * 0.04f, end = constr.maxWidth * 0.04f)
-            .width(constr.maxHeight * size)
-            .height(constr.maxHeight * size),
-
-        colors = ButtonDefaults.elevatedButtonColors(
-            containerColor = Color.White // Color de fondo del botón
-        ),
-    ) {
-        if (icon != null) {
-            Icon(
-                imageVector = icon,
-                "",
+    if(!isSystemInDarkTheme()) {
+        ElevatedButton(
+            elevation = ButtonDefaults.elevatedButtonElevation(
+                defaultElevation = 6.dp,
+                pressedElevation = 8.dp,
+                disabledElevation = 0.dp
+            ),
+            onClick = { onClick() },
+            shape = RoundedCornerShape(16),
+            modifier = Modifier
+                .padding(top = constr.maxWidth * 0.04f, end = constr.maxWidth * 0.04f)
+                .width(constr.maxHeight * size)
+                .height(constr.maxHeight * size),
+            colors = ButtonDefaults.elevatedButtonColors(
+                containerColor = Color.White,
+                contentColor = Color.Black
             )
+        ) {
+            if (icon != null) {
+                Icon(imageVector = icon, contentDescription = null)
+            }
+
+            if (text.isNotEmpty()) {
+                Text(
+                    text = text,
+                    fontFamily = InterFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    color = colorScheme.onSurface // Asegúrate de que el color del texto sea visible
+                )
+            }
         }
+    }
+    else{
+        Button(
+            onClick = {
+                onClick()
+            },
+            shape = RoundedCornerShape(16),
+            modifier = Modifier
+                .padding(top = constr.maxWidth * 0.04f, end = constr.maxWidth * 0.04f)
+                .width(constr.maxHeight * size)
+                .height(constr.maxHeight * size),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorScheme.surface,
+                contentColor = colorScheme.onSurface
+            ),
+        ) {
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                )
+            }
 
-        if (text != "") {
-            Text(
-                text = text,
-                fontFamily = InterFontFamily,
-                fontWeight = FontWeight.Bold,
-            )
-
+            if (text.isNotEmpty()) {
+                Text(
+                    text = text,
+                    fontFamily = InterFontFamily,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
         }
     }
 }

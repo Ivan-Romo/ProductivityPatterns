@@ -1,6 +1,7 @@
 package com.example.productivitypatterns.view
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -60,7 +61,9 @@ fun DevelopView(
 
             MediumButton(constr, buttonText = "Reset", onClick = {
                personalViewModel.resetData()
-            })
+            },
+                colorScheme = colorScheme
+            )
             if(data!=null){
                 Text(data!!.customQuestions.toString())
             }

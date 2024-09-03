@@ -28,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -45,9 +46,8 @@ fun DisplayQuestion(
     Box(
         modifier = Modifier
             .shadow(8.dp, RoundedCornerShape(16.dp))
-            .background(Color.White, shape = RoundedCornerShape(16.dp))
+            .background(colorScheme.surface, shape = RoundedCornerShape(16.dp))
     ) {
-        //Surface(shadowElevation = 20.dp,shape = RoundedCornerShape(16.dp),color = Color.White,) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,
@@ -64,8 +64,8 @@ fun DisplayQuestion(
             )
             if (question is Question.YesNoQuestion) {
                 Row {
-                    SmallButton(constr, text = "Yes", onClick = { onReply("yes") })
-                    SmallButton(constr, text = "No", onClick = { onReply("no") })
+                    SmallButton(constr, text = "Yes", onClick = { onReply("yes") }, colorScheme = colorScheme)
+                    SmallButton(constr, text = "No", onClick = { onReply("no") },colorScheme = colorScheme)
                 }
             } else if (question is Question.MultipleChoiceQuestion) {
                 if (personalViewModel.info.customAnswers.containsKey(question.id)) {
@@ -97,14 +97,16 @@ fun DisplayQuestion(
                                     constr,
                                     buttonText = option,
                                     onClick = { onReply(option) },
-                                    width = constr.maxWidth * 0.6f
+                                    width = constr.maxWidth * 0.6f,
+                                    colorScheme = colorScheme
                                 )
                             }
                         } else {
                             MediumButton(
                                 constr,
                                 buttonText = option,
-                                onClick = { onReply(option) }
+                                onClick = { onReply(option) },
+                                colorScheme = colorScheme
                             )
                         }
                     }
@@ -115,11 +117,12 @@ fun DisplayQuestion(
                         onClick = {
                             showDialog = true
                         },
+                        colorScheme = colorScheme
                     )
 
                     if (showDialog) {
                         AlertDialog(
-                            containerColor = Color.White,
+                            containerColor = colorScheme.surface,
                             onDismissRequest = { showDialog = false },
                             title = {
                                 Text("Add a new option")
@@ -152,14 +155,14 @@ fun DisplayQuestion(
             } else if (question is Question.RatingQuestion) {
                 for (i in 1..10 step 3) {
                     Row(modifier = Modifier.padding(top = 10.dp)) {
-                        SmallButton(constr, text = i.toString(), onClick = { onReply(i.toString()) })
+                        SmallButton(constr, text = i.toString(), onClick = { onReply(i.toString()) },colorScheme = colorScheme)
                         if (i + 1 <= 10) {
-                            SmallButton(constr, text = (i + 1).toString(), onClick = { onReply((i + 1).toString()) })
+                            SmallButton(constr, text = (i + 1).toString(), onClick = { onReply((i + 1).toString()) },colorScheme = colorScheme)
                         }
                         if (i + 2 <= 10) {
                             SmallButton(constr, text = (i + 2).toString(), onClick = {
                                 onReply((i + 2).toString())
-                            })
+                            },colorScheme = colorScheme)
                         }
                     }
                 }

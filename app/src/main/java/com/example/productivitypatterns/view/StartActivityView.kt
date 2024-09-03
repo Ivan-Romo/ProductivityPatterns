@@ -85,7 +85,7 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                            SmallButton(constr, Icons.Filled.Add, onClick = { addActivity = true })
+                            SmallButton(constr, Icons.Filled.Add, onClick = { addActivity = true },colorScheme = colorScheme)
                         }
 
                         Box(
@@ -177,7 +177,8 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                             started = false
                             questionIndex = 0
                             activityFinished = false
-                        }, buttonText = "Cancel")
+                        }, buttonText = "Cancel",
+                            colorScheme = colorScheme)
                     }
                 }
             }

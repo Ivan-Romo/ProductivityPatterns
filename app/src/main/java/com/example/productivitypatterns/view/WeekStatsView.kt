@@ -1,10 +1,12 @@
 package com.example.productivitypatterns.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -29,17 +31,15 @@ import com.example.productivitypatterns.viewmodel.StatsViewModel
 fun WeekStatsView(statsViewModel: StatsViewModel, personalViewModel: PersonalViewModel) {
     var type by remember { mutableStateOf(statsViewModel.sessionData.last().type) }
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Background)
+        color = colorScheme.background, modifier = Modifier.fillMaxSize()
     ) {
         BoxWithConstraints {
             var constr = this
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-                    .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
+                Box(Modifier.height(16.dp)){}
 
                 TypeDropdown(personalViewModel, onChangeType = { selectedType ->
                     type = selectedType
@@ -55,13 +55,17 @@ fun WeekStatsView(statsViewModel: StatsViewModel, personalViewModel: PersonalVie
 @Composable
 fun StatsContent(type: String, statsViewModel: StatsViewModel, personalViewModel: PersonalViewModel, constr:  BoxWithConstraintsScope)
 {
+    var bgColor = if (isSystemInDarkTheme()) "#1E1E1E" else "#FFFBFE"
+    var chartColor = if (isSystemInDarkTheme()) "#08a4a7" else BlueChartsCode
+    var chartColor2 = if (isSystemInDarkTheme()) "#c65102" else GreenChartsCode
+    var textColor = if (isSystemInDarkTheme()) "#FFF" else "#000000"
     Box(
         modifier = Modifier
             .padding(top = 16.dp)
             .width(constr.maxWidth * 0.9f)
             .shadow(8.dp, RoundedCornerShape(16.dp)) // Elevación con bordes redondeados
             .clip(RoundedCornerShape(16.dp)) // Recorte para asegurar los bordes redondeados
-            .background(Color.White)
+            .background(colorScheme.surface)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -88,19 +92,21 @@ fun StatsContent(type: String, statsViewModel: StatsViewModel, personalViewModel
             ) {
                 RadialCircleChart(
                     statsViewModel.getAverageProductivityInTheLast7Days(type),
-                    BlueChartsCode,
-                    BlueChartsCode,
-                    "Average"
+                    chartColor,
+                    textColor,
+                    "Average",
+                    backgroundColor = bgColor,
                 )
                 RadialCircleChart(
-                    statsViewModel.getProductivityInTheLastSession(type), BlueChartsCode, BlueChartsCode, "Last"
+                    statsViewModel.getProductivityInTheLastSession(type), chartColor, textColor, "Last",
+                    backgroundColor = bgColor,
                 )
             }
             val prodData = statsViewModel.getProductivityOfEachSessionInTheLast7Days(type)
             LineChart(
                 listOf(
                     "Productivity" to prodData.second,
-                ), prodData.first, listOf(BlueChartsCode)
+                ), prodData.first, listOf(chartColor)
             )
         }
 
@@ -119,7 +125,7 @@ fun StatsContent(type: String, statsViewModel: StatsViewModel, personalViewModel
                         .width(constr.maxWidth * 0.9f)
                         .shadow(8.dp, RoundedCornerShape(16.dp))
                         .clip(RoundedCornerShape(16.dp))
-                        .background(Color.White)
+                        .background(colorScheme.surface)
                 ) {
 
                     Column(
@@ -149,10 +155,12 @@ fun StatsContent(type: String, statsViewModel: StatsViewModel, personalViewModel
                                     .padding(start = 5.dp, end = 5.dp, top = 5.dp)
                             ) {
                                 RadialCircleChart(
-                                    data.second, BlueChartsCode, BlueChartsCode, "Yes"
+                                    data.second, chartColor, textColor, "Yes",
+                                    backgroundColor = bgColor,
                                 )
                                 RadialCircleChart(
-                                    data.second, BlueChartsCode, BlueChartsCode, "No"
+                                    data.second, chartColor, textColor, "No",
+                                    backgroundColor = bgColor,
                                 )
 
                             }
@@ -176,7 +184,7 @@ fun StatsContent(type: String, statsViewModel: StatsViewModel, personalViewModel
                                 listOf(
                                     "Productivity" to data.second.first,
                                     "Answer" to data.second.second,
-                                ), data.first, listOf(BlueChartsCode, GreenChartsCode)
+                                ), data.first, listOf(chartColor, chartColor2)
                             )
                         } else if ((questFromList is Question.MultipleChoiceQuestion) || (questFromCustom is Question.MultipleChoiceQuestion)) {
                             var data = statsViewModel.getMultipleStats(question.key, type)
@@ -194,7 +202,7 @@ fun StatsContent(type: String, statsViewModel: StatsViewModel, personalViewModel
                             BarChart(
                                 categories = data.keys.toList(),
                                 values = data.values.toList(),
-                                barColor = BlueChartsCode,
+                                barColor = chartColor,
                             )
                         }
                     }

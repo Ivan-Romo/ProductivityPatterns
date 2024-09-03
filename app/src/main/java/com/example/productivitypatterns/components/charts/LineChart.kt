@@ -95,7 +95,7 @@ fun LineChart(
                     } else {
                         setLayerType(LAYER_TYPE_SOFTWARE, null)
                     }
-
+                    setBackgroundColor(0x00000000)
                     webViewClient = WebViewClient()
                     webChromeClient = WebChromeClient()
                     settings.javaScriptEnabled = true

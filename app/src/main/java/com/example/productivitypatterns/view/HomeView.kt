@@ -2,6 +2,7 @@ package com.example.productivitypatterns.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Code
@@ -15,12 +16,17 @@ import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -49,10 +55,7 @@ fun Home(
     val navController = rememberNavController()
     val items = listOf(
         BottomNavigationItem(
-            title = "Session",
-            icon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-            route = "StartActivity"
+            title = "Session", icon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home, route = "StartActivity"
         ),
         BottomNavigationItem(
             title = "Develop", icon = Icons.Filled.Code, unselectedIcon = Icons.Outlined.Code, route = "Develop"
@@ -85,28 +88,41 @@ fun Home(
         Scaffold(topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                ),
-                title = {
+                    containerColor = colorScheme.surface
+                ), title = {
                     Text(
-                        text = items[selectedItemIndex].title,
-                        style = androidx.compose.ui.text.TextStyle(
+                        text = items[selectedItemIndex].title, style = androidx.compose.ui.text.TextStyle(
                             fontFamily = InterFontFamily,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                         )
                     )
-                },
+                }, modifier = Modifier
+                    .shadow(4.dp) // Añade una sombra de 4.dp
+                    .background(colorScheme.background)
             )
         }, bottomBar = {
             NavigationBar(
-                containerColor = Color.White,
+                contentColor = Color.Red,
+                containerColor = colorScheme.tertiaryContainer,
+                modifier = Modifier
+
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = 30.dp, topEnd = 30.dp
+                        )
+                    )
+                    .background(colorScheme.tertiaryContainer)  // Fondo del NavigationBar para que la sombra sea visible
+                    .graphicsLayer {
+                        clip = true
+                        shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
+                    },
+                tonalElevation = 10.dp,
             ) {
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(selected = selectedItemIndex == index, onClick = {
                         selectedItemIndex = index
                         navController.navigate(item.route) {
-                            // Evitar duplicados en la pila de navegación
                             popUpTo(navController.graph.startDestinationId) {
                                 saveState = true
                             }
@@ -120,18 +136,23 @@ fun Home(
                                     item.icon
                                 } else item.unselectedIcon,
                                 contentDescription = item.title,
-                                tint = if (index == selectedItemIndex) {colorScheme.background} else colorScheme.onSurface
+                                tint = if (index == selectedItemIndex) {
+                                    colorScheme.background
+                                } else colorScheme.onSurface
                             )
                         }
                     })
                 }
             }
+
         }) { paddingValues ->
             NavHost(
-                navController = navController, startDestination = "StartActivity", modifier = Modifier.padding(paddingValues)
+                navController = navController,
+                startDestination = "StartActivity",
+                modifier = Modifier.padding(paddingValues)
             ) {
                 composable("StartActivity") {
-                    StartActivityView(sessionViewModel, personalViewModel )
+                    StartActivityView(sessionViewModel, personalViewModel)
                 }
                 composable("Develop") {
                     DevelopView(modifier, auxNavController, authViewModel, personalViewModel = personalViewModel)
@@ -140,7 +161,7 @@ fun Home(
                     WeekStatsView(StatsViewModel(sessionViewModel), personalViewModel)
                 }
                 composable("Personal") {
-                   PersonalView(personalViewModel)
+                    PersonalView(personalViewModel)
                 }
             }
         }

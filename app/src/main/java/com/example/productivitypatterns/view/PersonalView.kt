@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +31,7 @@ fun PersonalView(viewModel: PersonalViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
+            .background(colorScheme.background)
     ) {
         BoxWithConstraints {
             var constr = this
@@ -46,6 +47,7 @@ fun PersonalView(viewModel: PersonalViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(colorScheme.background)
                     .verticalScroll(rememberScrollState())
             ) {
                 Box(
@@ -54,7 +56,7 @@ fun PersonalView(viewModel: PersonalViewModel) {
                         .width(constr.maxWidth * 0.9f)
                         .shadow(8.dp, RoundedCornerShape(16.dp))
                         .clip(RoundedCornerShape(16.dp))
-                        .background(Color.White)
+                        .background(colorScheme.surface)
                 ) {
                     Column(
                         horizontalAlignment = Alignment.Start,
@@ -103,7 +105,10 @@ fun PersonalView(viewModel: PersonalViewModel) {
                                         onCheckedChange = {
                                             isChecked = it
                                             viewModel.changeEnabled(question.first.id)
-                                        }
+                                        },
+                                        colors = CheckboxDefaults.colors(
+                                            checkmarkColor = colorScheme.onSurface,
+                                        )
                                     )
                                 }
                             }
@@ -114,7 +119,8 @@ fun PersonalView(viewModel: PersonalViewModel) {
                     constr,
                     buttonText = "Add question",
                     width = constr.maxWidth * 0.9f,
-                    onClick = { showDialog = true }  // Muestra el diálogo al hacer clic
+                    onClick = { showDialog = true } ,
+                    colorScheme = colorScheme
                 )
             }
 
@@ -148,17 +154,20 @@ fun PersonalView(viewModel: PersonalViewModel) {
                                         constr2,
                                         width = constr.maxWidth * 0.9f,
                                         buttonText = "Yes or No",
-                                        onClick = { type = "yesno" })
+                                        onClick = { type = "yesno" },
+                                        colorScheme = colorScheme)
                                     MediumButton(
                                         constr2,
                                         width = constr.maxWidth * 0.9f,
                                         buttonText = "Multiple Choice",
-                                        onClick = { type = "multiple" })
+                                        onClick = { type = "multiple" },
+                                        colorScheme = colorScheme)
                                     MediumButton(
                                         constr2,
                                         width = constr.maxWidth * 0.9f,
                                         buttonText = "1 to 10",
-                                        onClick = { type = "rating" })
+                                        onClick = { type = "rating" },
+                                        colorScheme = colorScheme)
                                 } else if (!questionEntered) {
                                     Text("Question text")
                                     TextField(
@@ -185,6 +194,7 @@ fun PersonalView(viewModel: PersonalViewModel) {
                                         onClick = {
                                             textFields = textFields + ""
                                         },
+                                        colorScheme = colorScheme
                                     )
 
                                 }

@@ -32,12 +32,18 @@ fun BarChart(
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;   
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: transparent;  /* Fondo transparente */
+        }
+        #chart {
+            margin-top:-1em; 
+            margin-left:-1em;
         }
     </style>
 </head>
 <body>
-    <div id="chart" style="margin-top:-1em; margin-left:-1em"></div>
+    <div id="chart"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
@@ -52,7 +58,8 @@ fun BarChart(
                 type: 'bar',
                 toolbar: {
                     show: false
-                }
+                },
+                background: 'transparent'  // Fondo del gráfico transparente
             },
             plotOptions: {
                 bar: {
@@ -144,8 +151,8 @@ fun BarChart(
                         setLayerType(LAYER_TYPE_HARDWARE, null)
                     }
 
-                    webViewClient = WebViewClient()
-                    webChromeClient = WebChromeClient()
+                    // Configurar el WebView para que tenga un fondo transparente
+                    setBackgroundColor(0x00000000)  // 0x00000000 es transparente
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
                     settings.loadWithOverviewMode = true
