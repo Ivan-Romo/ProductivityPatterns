@@ -53,6 +53,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation(libs.firebase.auth.ktx)
+    
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose.android)

@@ -4,14 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Analytics
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Analytics
-import androidx.compose.material.icons.outlined.Code
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
@@ -58,12 +52,9 @@ fun Home(
             title = "Session", icon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home, route = "StartActivity"
         ),
         BottomNavigationItem(
-            title = "Develop", icon = Icons.Filled.Code, unselectedIcon = Icons.Outlined.Code, route = "Develop"
-        ),
-        BottomNavigationItem(
             title = "Stats",
-            icon = Icons.Filled.Analytics,
-            unselectedIcon = Icons.Outlined.Analytics,
+            icon = Icons.Filled.BarChart,
+            unselectedIcon = Icons.Outlined.BarChart,
             route = "WeekStats",
             hasNews = false,
             badgeCount = 45
@@ -158,10 +149,10 @@ fun Home(
                     DevelopView(modifier, auxNavController, authViewModel, personalViewModel = personalViewModel)
                 }
                 composable("WeekStats") {
-                    WeekStatsView(StatsViewModel(sessionViewModel), personalViewModel)
+                    WeekStatsView(StatsViewModel(sessionViewModel), personalViewModel, sessionViewModel)
                 }
                 composable("Personal") {
-                    PersonalView(personalViewModel)
+                    PersonalView(personalViewModel, authViewModel)
                 }
             }
         }

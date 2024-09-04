@@ -3,6 +3,7 @@ package com.example.productivitypatterns.view
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -126,7 +127,12 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel:
 
             }
         } else {
-            Text("Progress Bar Question Number: " + questionIndex)
+            LinearProgressIndicator(
+                progress = { (questionIndex ) / listQuestions.size.toFloat() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp),
+            )
             DisplayQuestion(
                 listQuestions[questionIndex],
                 onReply = {

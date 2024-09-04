@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,27 +26,50 @@ import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.ui.theme.*
 import com.example.productivitypatterns.util.listQuestions
 import com.example.productivitypatterns.viewmodel.PersonalViewModel
+import com.example.productivitypatterns.viewmodel.SessionViewModel
 import com.example.productivitypatterns.viewmodel.StatsViewModel
+import kotlinx.coroutines.delay
+
 
 @Composable
-fun WeekStatsView(statsViewModel: StatsViewModel, personalViewModel: PersonalViewModel) {
+fun WeekStatsView(
+    statsViewModel: StatsViewModel,
+    personalViewModel: PersonalViewModel,
+    sessionViewModel: SessionViewModel
+) {
     var type by remember { mutableStateOf(statsViewModel.sessionData.last().type) }
-    Surface(
-        color = colorScheme.background, modifier = Modifier.fillMaxSize()
-    ) {
-        BoxWithConstraints {
-            var constr = this
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Box(Modifier.height(16.dp)){}
+    var isLoading by remember { mutableStateOf(true) }
 
-                TypeDropdown(personalViewModel, onChangeType = { selectedType ->
-                    type = selectedType
-                })
-                key(type) {
-                    StatsContent(type = type, statsViewModel, personalViewModel, constr)
+
+    LaunchedEffect(Unit) {
+        delay(1000)
+        isLoading = false
+    }
+    if (isLoading) {
+
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+    } else {
+
+
+        Surface(
+            color = colorScheme.background, modifier = Modifier.fillMaxSize()
+        ) {
+            BoxWithConstraints {
+                var constr = this
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Box(Modifier.height(16.dp)) {}
+
+                    TypeDropdown(personalViewModel, onChangeType = { selectedType ->
+                        type = selectedType
+                    }, sessionViewModel = sessionViewModel)
+                    key(type) {
+                        StatsContent(type = type, statsViewModel, personalViewModel, constr)
+                    }
                 }
             }
         }
@@ -53,8 +77,12 @@ fun WeekStatsView(statsViewModel: StatsViewModel, personalViewModel: PersonalVie
 }
 
 @Composable
-fun StatsContent(type: String, statsViewModel: StatsViewModel, personalViewModel: PersonalViewModel, constr:  BoxWithConstraintsScope)
-{
+fun StatsContent(
+    type: String,
+    statsViewModel: StatsViewModel,
+    personalViewModel: PersonalViewModel,
+    constr: BoxWithConstraintsScope
+) {
     var bgColor = if (isSystemInDarkTheme()) "#1E1E1E" else "#FFFBFE"
     var chartColor = if (isSystemInDarkTheme()) "#08a4a7" else BlueChartsCode
     var chartColor2 = if (isSystemInDarkTheme()) "#c65102" else GreenChartsCode
@@ -155,7 +183,7 @@ fun StatsContent(type: String, statsViewModel: StatsViewModel, personalViewModel
                                     .padding(start = 5.dp, end = 5.dp, top = 5.dp)
                             ) {
                                 RadialCircleChart(
-                                    data.second, chartColor, textColor, "Yes",
+                                    data.first, chartColor, textColor, "Yes",
                                     backgroundColor = bgColor,
                                 )
                                 RadialCircleChart(

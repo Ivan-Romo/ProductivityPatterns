@@ -23,7 +23,8 @@ fun SmallButton(
     text: String = "",
     onClick: () -> Unit = {},
     size: Float = 0.115f,
-    colorScheme: ColorScheme // El esquema de colores se pasa como parámetro
+    colorScheme: ColorScheme ,
+    isMainScreen: Boolean = false,
 ) {
     if(!isSystemInDarkTheme()) {
         ElevatedButton(
@@ -68,7 +69,7 @@ fun SmallButton(
                 .width(constr.maxHeight * size)
                 .height(constr.maxHeight * size),
             colors = ButtonDefaults.buttonColors(
-                containerColor = colorScheme.surface,
+                containerColor = if(isMainScreen) colorScheme.surface else colorScheme.background,
                 contentColor = colorScheme.onSurface
             ),
         ) {

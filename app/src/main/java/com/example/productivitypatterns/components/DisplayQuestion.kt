@@ -98,7 +98,8 @@ fun DisplayQuestion(
                                     buttonText = option,
                                     onClick = { onReply(option) },
                                     width = constr.maxWidth * 0.6f,
-                                    colorScheme = colorScheme
+                                    colorScheme = colorScheme,
+                                    isInBackground =  false
                                 )
                             }
                         } else {
@@ -106,7 +107,8 @@ fun DisplayQuestion(
                                 constr,
                                 buttonText = option,
                                 onClick = { onReply(option) },
-                                colorScheme = colorScheme
+                                colorScheme = colorScheme,
+                                isInBackground =  false
                             )
                         }
                     }
@@ -117,7 +119,8 @@ fun DisplayQuestion(
                         onClick = {
                             showDialog = true
                         },
-                        colorScheme = colorScheme
+                        colorScheme = colorScheme,
+                        isInBackground =  false
                     )
 
                     if (showDialog) {

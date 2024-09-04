@@ -24,10 +24,11 @@ import com.example.productivitypatterns.components.Buttons.MediumButton
 import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.ui.theme.Background
 import com.example.productivitypatterns.ui.theme.InterFontFamily
+import com.example.productivitypatterns.viewmodel.AuthViewModel
 import com.example.productivitypatterns.viewmodel.PersonalViewModel
 
 @Composable
-fun PersonalView(viewModel: PersonalViewModel) {
+fun PersonalView(viewModel: PersonalViewModel, authViewModel: AuthViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -122,6 +123,18 @@ fun PersonalView(viewModel: PersonalViewModel) {
                     onClick = { showDialog = true } ,
                     colorScheme = colorScheme
                 )
+
+                MediumButton(constr, buttonText = "Reset", onClick = {
+                    viewModel.resetData()
+                },
+                    colorScheme = colorScheme
+                )
+
+                TextButton(onClick = {
+                    authViewModel.signout()
+                }) {
+                    Text(text = "Sign out")
+                }
             }
 
             // Diálogo que se muestra cuando showDialog es true
@@ -133,7 +146,7 @@ fun PersonalView(viewModel: PersonalViewModel) {
                 var textFields by remember { mutableStateOf(listOf("")) }
 
                 AlertDialog(
-                    containerColor = Color.White,
+                    containerColor = colorScheme.surface,
                     onDismissRequest = { showDialog = false },
                     title = {
                         Text("Add New Question")

@@ -1,5 +1,9 @@
 package com.example.productivitypatterns.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.productivitypatterns.domain.Session
 import com.example.productivitypatterns.util.formatToDayMonth
@@ -8,14 +12,14 @@ import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
-    var sessionData = sessionViewModel.sessionList.value
+    var sessionData = mutableStateOf(sessionViewModel.sessionList.value).value
 
     init {
         if (sessionData.isEmpty()) {
-            sessionData = listOf<Session>(
+            sessionData = mutableListOf<Session>(
                 Session(
                     duration = 0,
-                    responses = mapOf(Pair(UUID.randomUUID().toString(), "")),
+                    responses = mapOf(Pair("prod", "0")),
                     type = ""
                 )
             )

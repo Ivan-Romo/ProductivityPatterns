@@ -23,11 +23,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.viewmodel.PersonalViewModel
+import com.example.productivitypatterns.viewmodel.SessionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TypeDropdown(viewModel: PersonalViewModel, onChangeType: (String) -> Unit) {
-    var selectedOption by remember { mutableStateOf("undefined") }
+fun TypeDropdown(viewModel: PersonalViewModel, onChangeType: (String) -> Unit, sessionViewModel: SessionViewModel ) {
+    var selectedOption by remember { mutableStateOf(sessionViewModel.getLastSessionType()) }
     var expanded by remember { mutableStateOf(false) }
     var options by remember { mutableStateOf(viewModel.info.activityTypes) }
     var type by remember { mutableStateOf("") }
@@ -80,10 +81,11 @@ fun TypeDropdown(viewModel: PersonalViewModel, onChangeType: (String) -> Unit) {
     }
 
     if (showDialog) {
-        AlertDialog(containerColor = Color.White, onDismissRequest = { showDialog = false }, title = {
+        AlertDialog(containerColor = colorScheme.surface, onDismissRequest = { showDialog = false }, title = {
             Text("Add New Question")
         }, text = {
             BoxWithConstraints {
+                var constr = this
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

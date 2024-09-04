@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.productivitypatterns.components.Buttons.BigButton
@@ -58,13 +59,13 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
     var addActivity: Boolean by remember { mutableStateOf(false) }
     var type: String by remember { mutableStateOf(viewModel.getLastSessionType()) }
 
-    var buttonText = "Start session"
+    var buttonText = "Press to start \na session"
 
-    var aboveButtonText = "Lorem ipsum dolor sit amet."
+    var aboveButtonText = "Be productive and watch the analytics"
 
     if (started) {
         buttonText = "Stop"
-        aboveButtonText = "Concentrate"
+        aboveButtonText = "Focus"
     }
 
     Surface(color = colorScheme.background, modifier = Modifier.fillMaxSize()) {
@@ -85,7 +86,7 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                            SmallButton(constr, Icons.Filled.Add, onClick = { addActivity = true },colorScheme = colorScheme)
+                            SmallButton(constr, Icons.Filled.Add, onClick = { addActivity = true },colorScheme = colorScheme, isMainScreen = true)
                         }
 
                         Box(
@@ -116,11 +117,12 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Box(Modifier.padding(top = 50.dp)) {
+                                Box(Modifier.padding(top = 50.dp, start = 10.dp, end = 10.dp)) {
                                     Text(
                                         text = buttonText,
                                         fontSize = 20.sp, // Tamaño más pequeño para el texto superior
                                         fontFamily = InterFontFamily,
+                                        textAlign = TextAlign.Center,
                                     )
                                 }
                                 Text(
@@ -140,7 +142,7 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                                 fontFamily = InterFontFamily,
                                 minLines = 2,
                             )
-                            TypeDropdown(personalViewModel, onChangeType = {type = it})
+                            TypeDropdown(personalViewModel, onChangeType = {type = it}, sessionViewModel = viewModel)
                         }
                     }
                 } else {
@@ -149,8 +151,14 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                         verticalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxSize(),
                     ) {
-                        Text("Progress Bar Question Number: " + questionIndex)
+
                         var questionList = personalViewModel.getListEnabledQuestions()
+                        LinearProgressIndicator(
+                            progress = { (questionIndex ) / questionList.size.toFloat() },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(8.dp),
+                        )
                         DisplayQuestion(
                             questionList[questionIndex],
                             onReply = {

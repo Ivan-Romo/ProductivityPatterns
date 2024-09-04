@@ -15,9 +15,9 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.HashMap
 
-class SessionViewModel : ViewModel() {
+class SessionViewModel() : ViewModel() {
 
-    private var _sessionList = MutableStateFlow<List<Session>>(emptyList())
+    private var _sessionList = MutableStateFlow<MutableList<Session>>(mutableListOf())
     var sessionList = _sessionList.asStateFlow()
 
     val auth = FirebaseAuth.getInstance()
@@ -50,7 +50,7 @@ class SessionViewModel : ViewModel() {
                         val sessionList = sessions.map { sessionMap ->
                             hashMapToSession(sessionMap)
                         }
-                        _sessionList.value = sessionList
+                        _sessionList.value = sessionList.toMutableList()
 
                     } else {
                         Log.d("getSessionList", "No such document")
@@ -63,8 +63,6 @@ class SessionViewModel : ViewModel() {
     }
 
     fun createSession(session: Session) {
-
-
         if (userId == null) {
             Log.d("createCar", "User not authenticated")
             return
@@ -73,7 +71,8 @@ class SessionViewModel : ViewModel() {
         val db = FirebaseFirestore.getInstance()
         val userSessionsDocRef = db.collection("sessions").document(userId)
 
-        userSessionsDocRef.set(hashMapOf("sessions" to FieldValue.arrayUnion(session.toHashMap())), SetOptions.merge())
+        _sessionList.value.add(session)
 
+        userSessionsDocRef.set(hashMapOf("sessions" to FieldValue.arrayUnion(session.toHashMap())), SetOptions.merge())
     }
 }

@@ -59,27 +59,6 @@ fun DevelopView(
         ) {
             Text(text = "Home Page", fontSize = 32.sp)
 
-            MediumButton(constr, buttonText = "Reset", onClick = {
-               personalViewModel.resetData()
-            },
-                colorScheme = colorScheme
-            )
-            if(data!=null){
-                Text(data!!.customQuestions.toString())
-            }
-
-
-
-
-
-
-
-
-            TextButton(onClick = {
-                authViewModel.signout()
-            }) {
-                Text(text = "Sign out")
-            }
         }
     }
 
