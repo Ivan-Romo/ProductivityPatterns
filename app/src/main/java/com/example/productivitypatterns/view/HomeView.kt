@@ -1,5 +1,6 @@
 package com.example.productivitypatterns.view
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,11 +18,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -30,10 +33,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.productivitypatterns.BottomNavigationItem
 import com.example.productivitypatterns.R
 import com.example.productivitypatterns.ui.theme.InterFontFamily
-import com.example.productivitypatterns.viewmodel.AuthViewModel
-import com.example.productivitypatterns.viewmodel.PersonalViewModel
-import com.example.productivitypatterns.viewmodel.SessionViewModel
-import com.example.productivitypatterns.viewmodel.StatsViewModel
+import com.example.productivitypatterns.viewmodel.*
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,10 +44,11 @@ fun Home(
     modifier: Modifier = Modifier,
     auxNavController: NavController,
     authViewModel: AuthViewModel,
-    sessionViewModel: SessionViewModel = viewModel()
+    sessionViewModel: SessionViewModel = viewModel(),
+    activity: Activity
 ) {
-
     var context = LocalContext.current
+    var adManager = AdManager(context)
     var personalViewModel = PersonalViewModel(context)
     val navController = rememberNavController()
     val items = listOf(
@@ -81,6 +85,7 @@ fun Home(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = colorScheme.surface
                 ), title = {
+
                     Text(
                         text = items[selectedItemIndex].title, style = androidx.compose.ui.text.TextStyle(
                             fontFamily = InterFontFamily,
@@ -88,6 +93,7 @@ fun Home(
                             fontWeight = FontWeight.Bold,
                         )
                     )
+
                 }, modifier = Modifier
                     .shadow(4.dp) // Añade una sombra de 4.dp
                     .background(colorScheme.background)
@@ -110,6 +116,7 @@ fun Home(
                     },
                 tonalElevation = 10.dp,
             ) {
+
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(selected = selectedItemIndex == index, onClick = {
                         selectedItemIndex = index
@@ -143,7 +150,7 @@ fun Home(
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable("StartActivity") {
-                    StartActivityView(sessionViewModel, personalViewModel)
+                    StartActivityView(sessionViewModel, personalViewModel, activity)
                 }
                 composable("Develop") {
                     DevelopView(modifier, auxNavController, authViewModel, personalViewModel = personalViewModel)
@@ -158,3 +165,4 @@ fun Home(
         }
     }
 }
+

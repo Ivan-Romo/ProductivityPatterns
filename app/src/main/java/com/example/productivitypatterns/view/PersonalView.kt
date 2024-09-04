@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -24,6 +25,7 @@ import com.example.productivitypatterns.components.Buttons.MediumButton
 import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.ui.theme.Background
 import com.example.productivitypatterns.ui.theme.InterFontFamily
+import com.example.productivitypatterns.viewmodel.AdManager
 import com.example.productivitypatterns.viewmodel.AuthViewModel
 import com.example.productivitypatterns.viewmodel.PersonalViewModel
 
@@ -46,6 +48,7 @@ fun PersonalView(viewModel: PersonalViewModel, authViewModel: AuthViewModel) {
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxSize()
                     .background(colorScheme.background)
@@ -108,7 +111,7 @@ fun PersonalView(viewModel: PersonalViewModel, authViewModel: AuthViewModel) {
                                             viewModel.changeEnabled(question.first.id)
                                         },
                                         colors = CheckboxDefaults.colors(
-                                            checkmarkColor = colorScheme.onSurface,
+                                            checkmarkColor = colorScheme.surface,
                                         )
                                     )
                                 }
@@ -116,24 +119,30 @@ fun PersonalView(viewModel: PersonalViewModel, authViewModel: AuthViewModel) {
                         }
                     }
                 }
-                MediumButton(
-                    constr,
-                    buttonText = "Add question",
-                    width = constr.maxWidth * 0.9f,
-                    onClick = { showDialog = true } ,
-                    colorScheme = colorScheme
-                )
+                Column(verticalArrangement = Arrangement.Center,) {
+                    MediumButton(
+                        constr,
+                        buttonText = "Add question",
+                        width = constr.maxWidth * 0.9f,
+                        onClick = { showDialog = true },
+                        colorScheme = colorScheme
+                    )
 
-                MediumButton(constr, buttonText = "Reset", onClick = {
-                    viewModel.resetData()
-                },
-                    colorScheme = colorScheme
-                )
+                    MediumButton(
+                        constr, buttonText = "Reset", onClick = {
+                            viewModel.resetData()
+                        },
+                        colorScheme = colorScheme
+                    )
 
-                TextButton(onClick = {
-                    authViewModel.signout()
-                }) {
-                    Text(text = "Sign out")
+                    TextButton(onClick = {
+                        authViewModel.signout()
+                    }) {
+                        Text(text = "Sign out")
+                    }
+                }
+                Box(Modifier.fillMaxWidth().height(50.dp)) {
+                    AdManager(LocalContext.current).loadBannerAd(modifier = Modifier.fillMaxSize())
                 }
             }
 

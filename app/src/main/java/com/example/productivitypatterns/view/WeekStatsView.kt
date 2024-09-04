@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.productivitypatterns.components.TypeDropdown
@@ -25,6 +26,7 @@ import com.example.productivitypatterns.components.charts.RadialCircleChart
 import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.ui.theme.*
 import com.example.productivitypatterns.util.listQuestions
+import com.example.productivitypatterns.viewmodel.AdManager
 import com.example.productivitypatterns.viewmodel.PersonalViewModel
 import com.example.productivitypatterns.viewmodel.SessionViewModel
 import com.example.productivitypatterns.viewmodel.StatsViewModel
@@ -42,6 +44,8 @@ fun WeekStatsView(
 
 
     LaunchedEffect(Unit) {
+        isLoading  = false
+        isLoading = true
         delay(1000)
         isLoading = false
     }
@@ -62,6 +66,9 @@ fun WeekStatsView(
                     horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
                         .verticalScroll(rememberScrollState())
                 ) {
+                    Box(Modifier.fillMaxWidth().height(50.dp)) {
+                        AdManager(LocalContext.current).loadBannerAd(modifier = Modifier.fillMaxSize())
+                    }
                     Box(Modifier.height(16.dp)) {}
 
                     TypeDropdown(personalViewModel, onChangeType = { selectedType ->
@@ -69,6 +76,10 @@ fun WeekStatsView(
                     }, sessionViewModel = sessionViewModel)
                     key(type) {
                         StatsContent(type = type, statsViewModel, personalViewModel, constr)
+                    }
+
+                    Box(Modifier.fillMaxWidth().height(50.dp).padding(top = 20.dp)) {
+                        AdManager(LocalContext.current).loadBannerAd(modifier = Modifier.fillMaxSize())
                     }
                 }
             }

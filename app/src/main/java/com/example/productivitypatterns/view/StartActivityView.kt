@@ -1,12 +1,10 @@
 package com.example.productivitypatterns.view
 
-import android.content.res.Resources.Theme
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
@@ -16,25 +14,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.productivitypatterns.components.Buttons.BigButton
 import com.example.productivitypatterns.components.Buttons.MediumButton
 import com.example.productivitypatterns.components.DisplayQuestion
 import com.example.productivitypatterns.components.Buttons.SmallButton
 import com.example.productivitypatterns.components.TypeDropdown
-import com.example.productivitypatterns.domain.Question
 import com.example.productivitypatterns.domain.Session
 import com.example.productivitypatterns.ui.theme.*
 import com.example.productivitypatterns.util.formatTime
-import com.example.productivitypatterns.util.listQuestions
+import com.example.productivitypatterns.viewmodel.AdManager
 import com.example.productivitypatterns.viewmodel.PersonalViewModel
 import com.example.productivitypatterns.viewmodel.SessionViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
 
 
 //example@gmail.com
@@ -49,7 +44,12 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalViewModel) {
+fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalViewModel, activity: Activity) {
+
+
+    val adManager = AdManager(LocalContext.current)
+
+
     var started: Boolean by remember { mutableStateOf(false) }
     val timerState = remember { mutableStateOf(0L) }
     val coroutineScope = rememberCoroutineScope()
@@ -69,6 +69,10 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
     }
 
     Surface(color = colorScheme.background, modifier = Modifier.fillMaxSize()) {
+
+        var adStatus by remember {
+            mutableStateOf(false)
+        }
         BoxWithConstraints {
             var constr = this
             if (addActivity) {
@@ -86,7 +90,13 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                            SmallButton(constr, Icons.Filled.Add, onClick = { addActivity = true },colorScheme = colorScheme, isMainScreen = true)
+                            SmallButton(
+                                constr,
+                                Icons.Filled.Add,
+                                onClick = { addActivity = true },
+                                colorScheme = colorScheme,
+                                isMainScreen = true
+                            )
                         }
 
                         Box(
@@ -142,7 +152,10 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                                 fontFamily = InterFontFamily,
                                 minLines = 2,
                             )
-                            TypeDropdown(personalViewModel, onChangeType = {type = it}, sessionViewModel = viewModel)
+                            TypeDropdown(personalViewModel, onChangeType = { type = it }, sessionViewModel = viewModel)
+                        }
+                        Box(Modifier.fillMaxWidth().height(50.dp)) {
+                            adManager.loadBannerAd(modifier = Modifier.fillMaxSize())
                         }
                     }
                 } else {
@@ -152,44 +165,59 @@ fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalVi
                         modifier = Modifier.fillMaxSize(),
                     ) {
 
-                        var questionList = personalViewModel.getListEnabledQuestions()
-                        LinearProgressIndicator(
-                            progress = { (questionIndex ) / questionList.size.toFloat() },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(8.dp),
-                        )
-                        DisplayQuestion(
-                            questionList[questionIndex],
-                            onReply = {
-                                answerList[questionList[questionIndex].id] = it
-                                questionIndex++
-                                if (questionIndex >= questionList.size) {
-                                    var session =
-                                        Session(duration = timerState.value, responses = answerList, type = type)
-                                    viewModel.createSession(session)
 
+                        if (!adStatus) {
+
+                            var questionList = personalViewModel.getListEnabledQuestions()
+                            LinearProgressIndicator(
+                                progress = { (questionIndex) / questionList.size.toFloat() },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(8.dp),
+                            )
+                            DisplayQuestion(
+                                questionList[questionIndex],
+                                onReply = {
+                                    answerList[questionList[questionIndex].id] = it
+                                    questionIndex++
+                                    if (questionIndex >= questionList.size) {
+                                        var session =
+                                            Session(duration = timerState.value, responses = answerList, type = type)
+                                        viewModel.createSession(session)
+                                        adStatus = true
+                                        started = false
+                                        timerState.value = 0
+                                        questionIndex = 0
+                                    }
+                                },
+                                constr = constr,
+                                personalViewModel = personalViewModel,
+                            )
+
+                            MediumButton(
+                                constr, onClick = {
+                                    activityFinished = false
+                                    addActivity = false
                                     started = false
-                                    timerState.value = 0
                                     questionIndex = 0
                                     activityFinished = false
-                                }
-                            },
-                            constr = constr,
-                            personalViewModel = personalViewModel,
-                        )
+                                }, buttonText = "Cancel",
+                                colorScheme = colorScheme
+                            )
+                        } else {
 
-                        MediumButton(constr, onClick = {
-                            activityFinished = false
-                            addActivity = false
-                            started = false
-                            questionIndex = 0
-                            activityFinished = false
-                        }, buttonText = "Cancel",
-                            colorScheme = colorScheme)
+                            adManager.showInterstitialAd(activity, onAdClosed =
+                            {
+                                adStatus = false
+                                activityFinished = false
+                            }
+                            )
+
+                        }
                     }
                 }
             }
         }
     }
 }
+

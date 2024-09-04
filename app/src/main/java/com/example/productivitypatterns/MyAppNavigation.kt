@@ -1,5 +1,6 @@
 package com.example.productivitypatterns
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -11,7 +12,7 @@ import com.example.productivitypatterns.view.SignupView
 import com.example.productivitypatterns.viewmodel.AuthViewModel
 
 @Composable
-fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
+fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel, activity: Activity) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "login", builder = {
@@ -22,7 +23,7 @@ fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel)
             SignupView(modifier, navController, authViewModel)
         }
         composable("home"){
-            Home(modifier, navController, authViewModel)
+            Home(modifier, navController, authViewModel, activity = activity)
         }
     })
 }
