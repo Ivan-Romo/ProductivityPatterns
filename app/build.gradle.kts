@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.productivitypatterns"
+    namespace = "com.productivity.productivitypatterns"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.productivitypatterns"
+        applicationId = "com.productivity.productivitypatterns"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
