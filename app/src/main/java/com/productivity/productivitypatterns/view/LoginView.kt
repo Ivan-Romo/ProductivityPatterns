@@ -3,6 +3,7 @@ package com.productivity.productivitypatterns.view
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -14,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.productivity.productivitypatterns.components.Buttons.MediumButton
 import com.productivity.productivitypatterns.viewmodel.AuthState
 import com.productivity.productivitypatterns.viewmodel.AuthViewModel
 
@@ -40,54 +42,54 @@ fun LoginView(modifier: Modifier = Modifier, navController: NavController, authV
         }
     }
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Login Page", fontSize = 32.sp)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = {
-                email = it
-            },
-            label = {
-                Text(text = "Email")
-            }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = {
-                password = it
-            },
-            label = {
-                Text(text = "Password")
-            }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            authViewModel.login(email,password)
-        },
-            enabled = authState.value != AuthState.Loading
+    BoxWithConstraints {
+        var constr = this
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Login")
+
+            Text(text = "Login Page", fontSize = 32.sp)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = {
+                    email = it
+                },
+                label = {
+                    Text(text = "Email")
+                }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = {
+                    password = it
+                },
+                label = {
+                    Text(text = "Password")
+                }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            MediumButton(constr,onClick = {
+                authViewModel.login(email, password)
+            },"Login", colorScheme = colorScheme, isInBackground = true)
+
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextButton(onClick = {
+                navController.navigate("signup")
+            }) {
+                Text(text = "Don't have an account, Signup")
+            }
+
         }
-
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextButton(onClick = {
-            navController.navigate("signup")
-        }) {
-            Text(text = "Don't have an account, Signup")
-        }
-
     }
 }
