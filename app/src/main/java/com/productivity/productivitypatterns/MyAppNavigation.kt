@@ -15,7 +15,7 @@ import com.productivity.productivitypatterns.viewmodel.AuthViewModel
 fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel, activity: Activity) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "login", builder = {
+    NavHost(navController = navController, startDestination = "home", builder = {
         composable("login"){
             LoginView(modifier, navController, authViewModel)
         }

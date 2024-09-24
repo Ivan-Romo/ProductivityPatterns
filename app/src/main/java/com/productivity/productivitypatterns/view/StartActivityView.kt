@@ -26,6 +26,7 @@ import com.productivity.productivitypatterns.domain.Session
 import com.productivity.productivitypatterns.ui.theme.*
 import com.productivity.productivitypatterns.util.formatTime
 import com.productivity.productivitypatterns.viewmodel.AdManager
+import com.productivity.productivitypatterns.viewmodel.LocalSessionViewModel
 import com.productivity.productivitypatterns.viewmodel.PersonalViewModel
 import com.productivity.productivitypatterns.viewmodel.SessionViewModel
 import kotlinx.coroutines.delay
@@ -44,7 +45,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StartActivityView(viewModel: SessionViewModel, personalViewModel: PersonalViewModel, activity: Activity) {
+fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: PersonalViewModel, activity: Activity) {
 
 
     val adManager = AdManager(LocalContext.current)

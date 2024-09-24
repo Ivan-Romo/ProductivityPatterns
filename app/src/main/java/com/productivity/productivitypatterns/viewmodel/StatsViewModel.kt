@@ -7,8 +7,8 @@ import com.productivity.productivitypatterns.util.formatToDayMonth
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-class StatsViewModel(sessionViewModel: SessionViewModel) : ViewModel() {
-    var sessionData = mutableStateOf(sessionViewModel.sessionList.value).value
+class StatsViewModel(private var _data: MutableList<Session>) : ViewModel() {//Yo creo que pasar solo la lista es mejor
+    var sessionData = mutableStateOf(_data).value
 
     init {
         if (sessionData.isEmpty()) {

@@ -16,6 +16,7 @@ import com.productivity.productivitypatterns.components.DisplayQuestion
 import com.productivity.productivitypatterns.domain.Session
 import com.productivity.productivitypatterns.ui.theme.InterFontFamily
 import com.productivity.productivitypatterns.util.listQuestions
+import com.productivity.productivitypatterns.viewmodel.LocalSessionViewModel
 import com.productivity.productivitypatterns.viewmodel.PersonalViewModel
 import com.productivity.productivitypatterns.viewmodel.SessionViewModel
 import java.time.LocalDateTime
@@ -23,7 +24,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Composable
-fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit,viewModel: SessionViewModel, personalViewModel: PersonalViewModel) {
+fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit, viewModel: LocalSessionViewModel, personalViewModel: PersonalViewModel) {
 
     var questionsMode by remember { mutableStateOf(false) }
     var questionIndex: Int by remember { mutableStateOf(0) }

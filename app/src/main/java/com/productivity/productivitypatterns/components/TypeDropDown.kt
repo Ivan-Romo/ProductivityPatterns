@@ -14,12 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import com.productivity.productivitypatterns.viewmodel.LocalSessionViewModel
 import com.productivity.productivitypatterns.viewmodel.PersonalViewModel
 import com.productivity.productivitypatterns.viewmodel.SessionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TypeDropdown(viewModel: PersonalViewModel, onChangeType: (String) -> Unit, sessionViewModel: SessionViewModel ) {
+fun TypeDropdown(viewModel: PersonalViewModel, onChangeType: (String) -> Unit, sessionViewModel: LocalSessionViewModel) {
     var selectedOption by remember { mutableStateOf(sessionViewModel.getLastSessionType()) }
     var expanded by remember { mutableStateOf(false) }
     var options by remember { mutableStateOf(viewModel.info.activityTypes) }

@@ -25,10 +25,7 @@ import com.productivity.productivitypatterns.components.charts.RadialCircleChart
 import com.productivity.productivitypatterns.domain.Question
 import com.productivity.productivitypatterns.ui.theme.*
 import com.productivity.productivitypatterns.util.listQuestions
-import com.productivity.productivitypatterns.viewmodel.AdManager
-import com.productivity.productivitypatterns.viewmodel.PersonalViewModel
-import com.productivity.productivitypatterns.viewmodel.SessionViewModel
-import com.productivity.productivitypatterns.viewmodel.StatsViewModel
+import com.productivity.productivitypatterns.viewmodel.*
 import kotlinx.coroutines.delay
 
 
@@ -36,7 +33,7 @@ import kotlinx.coroutines.delay
 fun WeekStatsView(
     statsViewModel: StatsViewModel,
     personalViewModel: PersonalViewModel,
-    sessionViewModel: SessionViewModel
+    sessionViewModel: LocalSessionViewModel
 ) {
     var type by remember { mutableStateOf(statsViewModel.sessionData.last().type) }
     var isLoading by remember { mutableStateOf(true) }

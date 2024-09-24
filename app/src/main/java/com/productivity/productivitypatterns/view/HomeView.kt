@@ -36,10 +36,10 @@ fun Home(
     modifier: Modifier = Modifier,
     auxNavController: NavController,
     authViewModel: AuthViewModel,
-    sessionViewModel: SessionViewModel = viewModel(),
     activity: Activity
 ) {
     var context = LocalContext.current
+    var sessionViewModel =  LocalSessionViewModel(context)
     var adManager = AdManager(context)
     var personalViewModel = PersonalViewModel(context)
     val navController = rememberNavController()
@@ -148,7 +148,7 @@ fun Home(
                     DevelopView(modifier, auxNavController, authViewModel, personalViewModel = personalViewModel)
                 }
                 composable("WeekStats") {
-                    WeekStatsView(StatsViewModel(sessionViewModel), personalViewModel, sessionViewModel)
+                    WeekStatsView(StatsViewModel(sessionViewModel.sessionList.value), personalViewModel, sessionViewModel)
                 }
                 composable("Personal") {
                     PersonalView(personalViewModel, authViewModel)
