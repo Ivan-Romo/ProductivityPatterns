@@ -7,7 +7,8 @@ import com.productivity.productivitypatterns.util.formatToDayMonth
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-class StatsViewModel(private var _data: MutableList<Session>) : ViewModel() {//Yo creo que pasar solo la lista es mejor
+class StatsViewModel(private var _data: MutableList<Session>) : ViewModel() {
+    //Yo creo que pasar solo la lista es mejor
     var sessionData = mutableStateOf(_data).value
 
     init {
@@ -29,6 +30,7 @@ class StatsViewModel(private var _data: MutableList<Session>) : ViewModel() {//Y
             daysBetween <= 7
         }
         .sortedBy { session -> session.datetime }
+        .take(14)
 
     fun getAverageProductivityInTheLast7Days(type: String): Int {
         var total = 0.0
@@ -58,7 +60,7 @@ class StatsViewModel(private var _data: MutableList<Session>) : ViewModel() {//Y
         var lastSession = sessionData.findLast { sesssion -> sesssion.type == type }
         if (lastSession == null) {
             return 0
-        }else {
+        } else {
             return lastSession.responses["prod"]!!.toInt() * 10
         }
     }
@@ -71,7 +73,7 @@ class StatsViewModel(private var _data: MutableList<Session>) : ViewModel() {//Y
         var noCount = 0
 
         sessionsLast7Days.forEach { session ->
-            if (session.type == type) {
+            if (session.type == type && session.responses.containsKey(idQuestion)) {
                 val productivity = session.responses["prod"]!!.toInt() * 10
                 if (session.responses[idQuestion] == "no") {
                     noProductivity += productivity
@@ -94,10 +96,11 @@ class StatsViewModel(private var _data: MutableList<Session>) : ViewModel() {//Y
         val categoriesList: MutableList<String> = mutableListOf()
         sessionsLast7Days.forEach { session ->
             if (session.type == type) {
-                productivityList.add(session.responses["prod"]!!.toInt() * 10)
-                categoriesList.add(session.datetime.formatToDayMonth())
-
                 if (session.responses.containsKey(idQuestion)) {
+                    productivityList.add(session.responses["prod"]!!.toInt() * 10)
+                    categoriesList.add(session.datetime.formatToDayMonth())
+
+
                     ratingList.add(session.responses[idQuestion]!!.toInt() * 10)
                 }
             }

@@ -48,7 +48,7 @@ fun Home(
             title = "Session", icon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home, route = "StartActivity"
         ),
         BottomNavigationItem(
-            title = "Stats",
+            title = "Week Stats",
             icon = Icons.Filled.BarChart,
             unselectedIcon = Icons.Outlined.BarChart,
             route = "WeekStats",
