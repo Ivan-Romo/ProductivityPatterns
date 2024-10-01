@@ -132,11 +132,11 @@ fun PersonalView(viewModel: PersonalViewModel, authViewModel: AuthViewModel) {
                         colorScheme = colorScheme
                     )
 
-                    TextButton(onClick = {
-                        authViewModel.signout()
-                    }) {
-                        Text(text = "Sign out")
-                    }
+//                    TextButton(onClick = {
+//                        authViewModel.signout()
+//                    }) {
+//                        Text(text = "Sign out")
+//                    }
                 }
                 Box(Modifier.fillMaxWidth().height(50.dp)) {
                     AdManager(LocalContext.current).loadBannerAd(modifier = Modifier.fillMaxSize())

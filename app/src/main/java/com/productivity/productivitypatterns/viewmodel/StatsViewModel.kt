@@ -55,7 +55,48 @@ class StatsViewModel(private var _data: MutableList<Session>) : ViewModel() {
         }
         return Pair<List<String>, List<Int>>(categoriesList, list)
     }
+    fun getProductivityByHourInTheLast7Days(type: String): Pair<List<String>, List<Int>> {
+        // Mapa para almacenar la suma de productividad por hora y el conteo de sesiones
+        val hourlyProductivity: MutableMap<Int, Pair<Int, Int>> = mutableMapOf()
 
+        sessionsLast7Days.forEach { session ->
+            if (session.type == type) {
+                val endTime = session.datetime
+                val startTime = endTime.minusMinutes(session.duration)
+                val productivity = session.responses["prod"]?.toInt()?.times(10) ?: 0
+
+                // Recorremos las horas que cubre la sesión
+                var currentTime = startTime
+                while (currentTime.isBefore(endTime) || currentTime.isEqual(endTime)) {
+                    val hour = currentTime.hour
+
+                    // Si ya existe la hora en el mapa, actualizamos la suma y el conteo
+                    if (hourlyProductivity.containsKey(hour)) {
+                        val (sum, count) = hourlyProductivity[hour]!!
+                        hourlyProductivity[hour] = Pair(sum + productivity, count + 1)
+                    } else {
+                        // Si no existe, la añadimos con la productividad actual y un conteo de 1
+                        hourlyProductivity[hour] = Pair(productivity, 1)
+                    }
+
+                    // Pasamos a la siguiente hora
+                    currentTime = currentTime.plusHours(1)
+                }
+            }
+        }
+
+        // Crear las listas de horas y productividad solo para las horas con datos
+        val hoursList = mutableListOf<String>()
+        val averageProductivityList = mutableListOf<Int>()
+
+        hourlyProductivity.forEach { (hour, value) ->
+            val (sum, count) = value
+            hoursList.add(hour.toString())
+            averageProductivityList.add(sum / count)
+        }
+
+        return Pair(hoursList, averageProductivityList)
+    }
     fun getProductivityInTheLastSession(type: String): Int {
         var lastSession = sessionData.findLast { sesssion -> sesssion.type == type }
         if (lastSession == null) {

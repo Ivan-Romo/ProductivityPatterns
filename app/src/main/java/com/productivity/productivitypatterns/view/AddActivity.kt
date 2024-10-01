@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.productivity.productivitypatterns.components.Buttons.MediumButton
 import com.productivity.productivitypatterns.components.DisplayQuestion
+import com.productivity.productivitypatterns.components.TypeDropdown
 import com.productivity.productivitypatterns.domain.Session
 import com.productivity.productivitypatterns.ui.theme.InterFontFamily
 import com.productivity.productivitypatterns.util.listQuestions
@@ -35,7 +36,6 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit, viewModel
     var selectedDate by remember { mutableStateOf("") }
     var selectedStartTime by remember { mutableStateOf("") }
     var selectedEndTime by remember { mutableStateOf("") }
-
     var selectedDateTime by remember { mutableStateOf<LocalDateTime?>(null) }
 
     val calendar = Calendar.getInstance()
@@ -145,15 +145,14 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit, viewModel
                         val endDateTime = LocalDateTime.parse("$selectedDate $selectedEndTime", DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"))
                         var session =
                             Session(
-                                datetime = LocalDateTime.parse("$selectedDate $selectedStartTime", DateTimeFormatter.ofPattern("d/M/yyyy HH:mm")),
+                                datetime = LocalDateTime.parse("$selectedDate $selectedEndTime", DateTimeFormatter.ofPattern("d/M/yyyy HH:mm")),
                                 duration = java.time.Duration.between(startDateTime, endDateTime).toMinutes(),
                                 responses = answerList,
-                                type = "TODO"
+                                type = viewModel.sessionList.value.last().type,
                             )
                         viewModel.createSession(session)
                         questionIndex = 0
                         onCancel()
-
                     }
 
                 },

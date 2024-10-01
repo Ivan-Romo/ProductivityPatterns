@@ -52,7 +52,6 @@ fun WeekStatsView(
         }
     } else {
 
-
         Surface(
             color = colorScheme.background, modifier = Modifier.fillMaxSize()
         ) {
@@ -138,6 +137,41 @@ fun StatsContent(
                 )
             }
             val prodData = statsViewModel.getProductivityOfEachSessionInTheLast7Days(type)
+            LineChart(
+                listOf(
+                    "Productivity" to prodData.second,
+                ), prodData.first, listOf(chartColor)
+            )
+        }
+
+    }
+
+    Box(
+        modifier = Modifier
+            .padding(top = 16.dp)
+            .width(constr.maxWidth * 0.9f)
+            .shadow(8.dp, RoundedCornerShape(16.dp)) // Elevación con bordes redondeados
+            .clip(RoundedCornerShape(16.dp)) // Recorte para asegurar los bordes redondeados
+            .background(colorScheme.surface)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxWidth()
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    "Productivity by hour",
+                    textAlign = TextAlign.Left,
+                    fontFamily = InterFontFamily
+                )
+            }
+            val prodData = statsViewModel.getProductivityByHourInTheLast7Days(type)
             LineChart(
                 listOf(
                     "Productivity" to prodData.second,
