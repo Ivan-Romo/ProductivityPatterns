@@ -33,7 +33,8 @@ fun RadialCircleChart(
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.53.0/dist/apexcharts.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.53.0"></script>
     <style>
       body {
           font-family: 'Inter', sans-serif;

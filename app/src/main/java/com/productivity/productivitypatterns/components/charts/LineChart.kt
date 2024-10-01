@@ -42,13 +42,13 @@ fun LineChart(
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ApexCharts Example</title>
     <!-- Incluir ApexCharts CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts/dist/apexcharts.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.28.3/dist/apexcharts.css">
 </head>
 <body>
     <div id="chart" style="margin-top:-1em; margin-left:-1em"></div>
 
     <!-- Incluir ApexCharts JS -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.28.3"></script>
     <script>
         // Datos y opciones del gráfico
         const options = {
