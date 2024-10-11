@@ -15,13 +15,13 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 class AdManager(val context: Context) {
     var mInterstitialAd: InterstitialAd? = null
     //ESTAS SON LAS DE DEBUG
-        private val interstitialId = "ca-app-pub-3940256099942544/1033173712"
-        private val bannerId = "ca-app-pub-3940256099942544/9214589741"
+//        private val interstitialId = "ca-app-pub-3940256099942544/1033173712"
+//        private val bannerId = "ca-app-pub-3940256099942544/9214589741"
 
 
     //ESTAS NO SOSIO. CUIDADO
-//    private val interstitialId = "ca-app-pub-4336258340172398/9910781745"
-//    private val bannerId = "ca-app-pub-4336258340172398/3076441358"
+    private val interstitialId = "ca-app-pub-4336258340172398/9910781745"
+    private val bannerId = "ca-app-pub-4336258340172398/3076441358"
 
     init {
         loadInterstitialAd({})
