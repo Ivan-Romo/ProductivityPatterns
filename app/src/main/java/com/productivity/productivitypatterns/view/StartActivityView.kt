@@ -52,6 +52,9 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
 
 
     var started: Boolean by remember { mutableStateOf(false) }
+    val startTime = remember { mutableStateOf<Long?>(null) }
+    val currentTime = remember { mutableStateOf(System.currentTimeMillis()) }
+
     val timerState = remember { mutableStateOf(0L) }
     val coroutineScope = rememberCoroutineScope()
     var activityFinished: Boolean by remember { mutableStateOf(false) }
@@ -59,6 +62,8 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
     var answerList: MutableMap<String, String> = mutableMapOf()
     var addActivity: Boolean by remember { mutableStateOf(false) }
     var type: String by remember { mutableStateOf(viewModel.getLastSessionType()) }
+
+    var timer: Long? by remember { mutableStateOf(0L) }
 
     var buttonText = "Press to start \na session"
 
@@ -68,6 +73,27 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
         buttonText = "Stop"
         aboveButtonText = "Focus"
     }
+
+    LaunchedEffect(started) {
+        if (started) {
+            startTime.value = System.currentTimeMillis()
+        } else {
+            startTime.value = null
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            if (started) {
+                currentTime.value = System.currentTimeMillis()
+            }
+            delay(1000L)
+        }
+    }
+
+    val elapsedTime: Long = startTime.value?.let { start ->
+        (currentTime.value - start) / 1000 // Calcula el tiempo en segundos
+    } ?: 0L
 
     Surface(color = colorScheme.background, modifier = Modifier.fillMaxSize()) {
 
@@ -107,16 +133,8 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                                 .clip(CircleShape) // Recorta en forma de círculo
                                 .background(colorScheme.surface)
                                 .clickable {
-
                                     started = !started
-                                    if (started) {
-                                        coroutineScope.launch {
-                                            while (started) {
-                                                delay(1000L)
-                                                timerState.value += 1
-                                            }
-                                        }
-                                    } else if (!activityFinished) {
+                                    if (!started && !activityFinished) {
                                         activityFinished = true
                                     }
                                 },
@@ -136,8 +154,12 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                                         textAlign = TextAlign.Center,
                                     )
                                 }
+                                timer = elapsedTime
+                                if(elapsedTime < 0) {
+                                    timer = 0L
+                                }
                                 Text(
-                                    text = formatTime(timerState.value),
+                                    text = formatTime(timer!!),
                                     fontSize = 40.sp, // Tamaño más grande para el temporizador
                                     fontFamily = InterFontFamily
                                 )
@@ -183,7 +205,7 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                                     questionIndex++
                                     if (questionIndex >= questionList.size) {
                                         var session =
-                                            Session(duration = timerState.value, responses = answerList, type = type)
+                                            Session(duration = elapsedTime, responses = answerList, type = type)
                                         viewModel.createSession(session)
                                         adStatus = true
                                         started = false
