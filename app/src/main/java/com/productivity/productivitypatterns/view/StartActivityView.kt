@@ -15,7 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.productivity.productivitypatterns.components.Buttons.MediumButton
@@ -47,65 +49,22 @@ import kotlinx.coroutines.launch
 @Composable
 fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: PersonalViewModel, activity: Activity) {
 
-
     val adManager = AdManager(LocalContext.current)
 
-
-    var started: Boolean by remember { mutableStateOf(false) }
-    val startTime = remember { mutableStateOf<Long?>(null) }
-    val currentTime = remember { mutableStateOf(System.currentTimeMillis()) }
-
-    val timerState = remember { mutableStateOf(0L) }
-    val coroutineScope = rememberCoroutineScope()
     var activityFinished: Boolean by remember { mutableStateOf(false) }
     var questionIndex: Int by remember { mutableStateOf(0) }
     var answerList: MutableMap<String, String> = mutableMapOf()
     var addActivity: Boolean by remember { mutableStateOf(false) }
     var type: String by remember { mutableStateOf(viewModel.getLastSessionType()) }
 
-    var timer: Long? by remember { mutableStateOf(0L) }
-
-    var buttonText = "Press to start \na session"
-
-    var aboveButtonText = "Be productive and watch the analytics"
-
-    if (started) {
-        buttonText = "Stop"
-        aboveButtonText = "Focus"
-    }
-
-    LaunchedEffect(started) {
-        if (started) {
-            startTime.value = System.currentTimeMillis()
-        } else {
-            startTime.value = null
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            if (started) {
-                currentTime.value = System.currentTimeMillis()
-            }
-            delay(1000L)
-        }
-    }
-
-    val elapsedTime: Long = startTime.value?.let { start ->
-        (currentTime.value - start) / 1000 // Calcula el tiempo en segundos
-    } ?: 0L
-
     Surface(color = colorScheme.background, modifier = Modifier.fillMaxSize()) {
+        var adStatus by remember { mutableStateOf(false) }
 
-        var adStatus by remember {
-            mutableStateOf(false)
-        }
         BoxWithConstraints {
             var constr = this
             if (addActivity) {
                 AddActivity(constr, onCancel = {
                     addActivity = false
-                    started = false
                     questionIndex = 0
                     activityFinished = false
                 }, viewModel, personalViewModel)
@@ -133,10 +92,7 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                                 .clip(CircleShape) // Recorta en forma de círculo
                                 .background(colorScheme.surface)
                                 .clickable {
-                                    started = !started
-                                    if (!started && !activityFinished) {
-                                        activityFinished = true
-                                    }
+                                    activityFinished = true
                                 },
                         ) {
                             Column(
@@ -144,33 +100,19 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                                     .align(Alignment.Center)
                                     .fillMaxSize(),
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.SpaceBetween
+                                verticalArrangement = Arrangement.Center
                             ) {
-                                Box(Modifier.padding(top = 50.dp, start = 10.dp, end = 10.dp)) {
-                                    Text(
-                                        text = buttonText,
-                                        fontSize = 20.sp, // Tamaño más pequeño para el texto superior
-                                        fontFamily = InterFontFamily,
-                                        textAlign = TextAlign.Center,
-                                    )
-                                }
-                                timer = elapsedTime
-                                if(elapsedTime < 0) {
-                                    timer = 0L
-                                }
                                 Text(
-                                    text = formatTime(timer!!),
-                                    fontSize = 40.sp, // Tamaño más grande para el temporizador
-                                    fontFamily = InterFontFamily
+                                    text = "Add a \n\nsession",
+                                    fontSize = 40.sp,
+                                    fontFamily = InterFontFamily,
+                                    textAlign = TextAlign.Center,
                                 )
-                                Box(Modifier.padding(bottom = 50.dp)) {}
-
                             }
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
                             Text(
-                                text = aboveButtonText,
+                                text = "Be productive and watch the analytics",
                                 fontSize = 16.sp,
                                 fontFamily = InterFontFamily,
                                 minLines = 2,
@@ -188,12 +130,10 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                         modifier = Modifier.fillMaxSize(),
                     ) {
 
-
                         if (!adStatus) {
-
-                            var questionList = personalViewModel.getListEnabledQuestions()
+                            val questionList = personalViewModel.getListEnabledQuestions()
                             LinearProgressIndicator(
-                                progress = { (questionIndex) / questionList.size.toFloat() },
+                                progress = questionIndex / questionList.size.toFloat(),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(8.dp),
@@ -204,12 +144,13 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                                     answerList[questionList[questionIndex].id] = it
                                     questionIndex++
                                     if (questionIndex >= questionList.size) {
-                                        var session =
-                                            Session(duration = elapsedTime, responses = answerList, type = type)
+                                        val session = Session(
+                                            duration = 60L, // Duración fija en segundos
+                                            responses = answerList,
+                                            type = type
+                                        )
                                         viewModel.createSession(session)
                                         adStatus = true
-                                        started = false
-                                        timerState.value = 0
                                         questionIndex = 0
                                     }
                                 },
@@ -221,21 +162,15 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                                 constr, onClick = {
                                     activityFinished = false
                                     addActivity = false
-                                    started = false
                                     questionIndex = 0
-                                    activityFinished = false
                                 }, buttonText = "Cancel",
                                 colorScheme = colorScheme
                             )
                         } else {
-
-                            adManager.showInterstitialAd(activity, onAdClosed =
-                            {
+                            adManager.showInterstitialAd(activity, onAdClosed = {
                                 adStatus = false
                                 activityFinished = false
-                            }
-                            )
-
+                            })
                         }
                     }
                 }
