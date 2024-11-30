@@ -125,12 +125,12 @@ fun PersonalView(viewModel: PersonalViewModel, authViewModel: AuthViewModel) {
                         colorScheme = colorScheme
                     )
 
-                    MediumButton(
-                        constr, buttonText = "Reset", onClick = {
-                            viewModel.resetData()
-                        },
-                        colorScheme = colorScheme
-                    )
+//                    MediumButton(
+//                        constr, buttonText = "Reset", onClick = {
+//                            viewModel.resetData()
+//                        },
+//                        colorScheme = colorScheme
+//                    )
 
 //                    TextButton(onClick = {
 //                        authViewModel.signout()
