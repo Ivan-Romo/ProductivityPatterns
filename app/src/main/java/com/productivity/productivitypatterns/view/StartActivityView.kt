@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.PostAdd
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
@@ -14,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -75,39 +78,123 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                         verticalArrangement = Arrangement.SpaceBetween,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                            SmallButton(
-                                constr,
-                                Icons.Filled.Add,
-                                onClick = { addActivity = true },
-                                colorScheme = colorScheme,
-                                isMainScreen = true
-                            )
-                        }
-
-                        Box(
-                            modifier = Modifier
-                                .size(300.dp)
-                                .shadow(8.dp, CircleShape, clip = false) // Aplica la sombra sin afectar el recorte
-                                .clip(CircleShape) // Recorta en forma de círculo
-                                .background(colorScheme.surface)
-                                .clickable {
-                                    activityFinished = true
-                                },
-                        ) {
-                            Column(
+                        Column(Modifier.padding(top = 80.dp)) {
+                            Card(
                                 modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                colors = CardDefaults.cardColors(Color.White),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                                shape = RoundedCornerShape(12.dp)
                             ) {
-                                Text(
-                                    text = "Add a \n\nsession",
-                                    fontSize = 40.sp,
-                                    fontFamily = InterFontFamily,
-                                    textAlign = TextAlign.Center,
-                                )
+                                Row(
+                                    modifier = Modifier
+                                        .clickable(onClick = { activityFinished = true })
+                                        .padding(16.dp)
+                                        .fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .background(
+                                                    color = Color.Red.copy(alpha = 0.1f),
+                                                    shape = RoundedCornerShape(12.dp)
+                                                )
+                                                .padding(8.dp)
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.LibraryAdd,
+                                                contentDescription = null,
+                                                tint = Color.Red
+                                            )
+                                        }
+                                        Text(
+                                            text = "Add a session",
+                                            fontFamily = InterFontFamily,
+//                                        fontWeight = FontWeight.SemiBold,
+                                            fontSize = 20.sp,
+                                            style = MaterialTheme.typography.titleLarge
+                                        )
+                                    }
+                                    Box(
+                                        modifier = Modifier
+                                            .background(
+                                                color = Color(13, 188, 171).copy(alpha = 0.1f),
+                                                shape = RoundedCornerShape(12.dp)
+                                            )
+                                            .padding(8.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowForward,
+                                            contentDescription = null,
+                                            tint = Color(13, 188, 171)
+                                        )
+                                    }
+                                }
+                            }
+
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                colors = CardDefaults.cardColors(Color.White),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .clickable(onClick = { addActivity = true })
+                                        .padding(16.dp)
+                                        .fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .background(
+                                                    color = Color.Blue.copy(alpha = 0.1f),
+                                                    shape = RoundedCornerShape(12.dp)
+                                                )
+                                                .padding(8.dp)
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.PlaylistAdd,
+                                                contentDescription = null,
+                                                tint = Color.Blue
+                                            )
+                                        }
+                                        Text(
+                                            text = "Create session manually",
+                                            fontFamily = InterFontFamily,
+//                                        fontWeight = FontWeight.SemiBold,
+                                            fontSize = 20.sp,
+                                            style = MaterialTheme.typography.titleLarge
+                                        )
+                                    }
+                                    Box(
+                                        modifier = Modifier
+                                            .background(
+                                                color = Color(13, 188, 171).copy(alpha = 0.1f),
+                                                shape = RoundedCornerShape(12.dp)
+                                            )
+                                            .padding(8.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowForward,
+                                            contentDescription = null,
+                                            tint = Color(13, 188, 171)
+                                        )
+                                    }
+                                }
                             }
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -119,7 +206,10 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                             )
                             TypeDropdown(personalViewModel, onChangeType = { type = it }, sessionViewModel = viewModel)
                         }
-                        Box(Modifier.fillMaxWidth().height(50.dp)) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(50.dp)) {
                             adManager.loadBannerAd(modifier = Modifier.fillMaxSize())
                         }
                     }

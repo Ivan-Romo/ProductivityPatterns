@@ -75,7 +75,7 @@ fun Home(
         Scaffold(topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorScheme.surface
+                    containerColor = Color(13,188,171),
                 ), title = {
 
                     Text(
@@ -83,6 +83,7 @@ fun Home(
                             fontFamily = InterFontFamily,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
+                            color = Color.White
                         )
                     )
 

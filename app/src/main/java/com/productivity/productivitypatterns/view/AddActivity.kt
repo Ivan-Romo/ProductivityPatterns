@@ -83,7 +83,7 @@ fun AddActivity(constr: BoxWithConstraintsScope, onCancel: () -> Unit, viewModel
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 10.dp),
+                .padding(top = 10.dp),
     ) {
 
         if (!questionsMode) {
