@@ -89,10 +89,15 @@ fun StatsContent(
     personalViewModel: PersonalViewModel,
     constr: BoxWithConstraintsScope
 ) {
-    var bgColor = if (isSystemInDarkTheme()) "#1E1E1E" else "#FFFBFE"
-    var chartColor = if (isSystemInDarkTheme()) "#08a4a7" else BlueChartsCode
-    var chartColor2 = if (isSystemInDarkTheme()) "#c65102" else GreenChartsCode
-    var textColor = if (isSystemInDarkTheme()) "#FFF" else "#000000"
+//    var bgColor = if (isSystemInDarkTheme()) "#1E1E1E" else "#FFFBFE"
+//    var chartColor = if (isSystemInDarkTheme()) "#08a4a7" else BlueChartsCode
+//    var chartColor2 = if (isSystemInDarkTheme()) "#c65102" else GreenChartsCode
+//    var textColor = if (isSystemInDarkTheme()) "#FFF" else "#000000"
+    var bgColor = "#FFFBFE"
+    var chartColor = BlueChartsCode
+    var chartColor2 = GreenChartsCode
+    var textColor = "#000000"
+
     Box(
         modifier = Modifier
             .padding(top = 16.dp)
