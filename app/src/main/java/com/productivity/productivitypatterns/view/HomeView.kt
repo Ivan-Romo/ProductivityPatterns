@@ -40,6 +40,7 @@ fun Home(
 ) {
     var context = LocalContext.current
     var sessionViewModel =  LocalSessionViewModel(context)
+    var gamificationViewModel =  GamificationViewModel(context)
     var adManager = AdManager(context)
     var personalViewModel = PersonalViewModel(context)
     val navController = rememberNavController()
@@ -143,7 +144,7 @@ fun Home(
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable("StartActivity") {
-                    StartActivityView(sessionViewModel, personalViewModel, activity)
+                    StartActivityView(sessionViewModel, personalViewModel, activity, gamificationViewModel)
                 }
                 composable("Develop") {
                     DevelopView(modifier, auxNavController, authViewModel, personalViewModel = personalViewModel)

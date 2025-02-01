@@ -30,10 +30,7 @@ import com.productivity.productivitypatterns.components.TypeDropdown
 import com.productivity.productivitypatterns.domain.Session
 import com.productivity.productivitypatterns.ui.theme.*
 import com.productivity.productivitypatterns.util.formatTime
-import com.productivity.productivitypatterns.viewmodel.AdManager
-import com.productivity.productivitypatterns.viewmodel.LocalSessionViewModel
-import com.productivity.productivitypatterns.viewmodel.PersonalViewModel
-import com.productivity.productivitypatterns.viewmodel.SessionViewModel
+import com.productivity.productivitypatterns.viewmodel.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -50,7 +47,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: PersonalViewModel, activity: Activity) {
+fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: PersonalViewModel, activity: Activity, gamificationViewModel: GamificationViewModel) {
 
     val adManager = AdManager(LocalContext.current)
 
@@ -199,7 +196,8 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "Be productive and watch the analytics",
+                               // text = "Be productive and earn points!",
+                                text = "Points: " + gamificationViewModel.getPoints(),
                                 fontSize = 16.sp,
                                 fontFamily = InterFontFamily,
                                 minLines = 2,
@@ -240,6 +238,7 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                                             type = type
                                         )
                                         viewModel.createSession(session)
+                                        gamificationViewModel.addPoints(1)
                                         adStatus = true
                                         questionIndex = 0
                                     }
