@@ -64,6 +64,14 @@ fun Home(
             hasNews = false,
             badgeCount = 45
         ),
+        BottomNavigationItem(
+            title = "Achievements",
+            icon = Icons.Filled.VideogameAsset,
+            unselectedIcon = Icons.Outlined.VideogameAsset,
+            route = "Achievements",
+            hasNews = false,
+            badgeCount = 45
+        ),
     )
 
     var selectedItemIndex by rememberSaveable {
@@ -154,6 +162,9 @@ fun Home(
                 }
                 composable("Personal") {
                     PersonalView(personalViewModel, authViewModel)
+                }
+                composable("Achievements") {
+                    Achievements(gamificationViewModel)
                 }
             }
         }
