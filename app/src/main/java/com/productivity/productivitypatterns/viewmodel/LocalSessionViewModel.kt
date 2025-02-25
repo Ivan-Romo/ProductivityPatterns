@@ -51,6 +51,10 @@ class LocalSessionViewModel(private val context: Context): ViewModel() {
         }
     }
 
+    fun sessionCount(): Int{
+        return _sessionList.value.size
+    }
+
     fun createSession(session: Session) {
         _sessionList.value.add(session)
         saveUserSessions()

@@ -40,7 +40,7 @@ fun Home(
 ) {
     var context = LocalContext.current
     var sessionViewModel =  LocalSessionViewModel(context)
-    var gamificationViewModel =  GamificationViewModel(context)
+    var gamificationViewModel =  GamificationViewModel(context, localSessionViewModel = sessionViewModel)
     var adManager = AdManager(context)
     var personalViewModel = PersonalViewModel(context)
     val navController = rememberNavController()

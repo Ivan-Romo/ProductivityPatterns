@@ -239,6 +239,7 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                                         )
                                         viewModel.createSession(session)
                                         gamificationViewModel.addPoints(1)
+                                        gamificationViewModel.checkAchievements();
                                         adStatus = true
                                         questionIndex = 0
                                     }

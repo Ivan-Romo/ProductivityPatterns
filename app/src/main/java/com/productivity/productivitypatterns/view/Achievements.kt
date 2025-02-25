@@ -35,6 +35,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -48,16 +49,28 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.*
+import com.productivity.productivitypatterns.components.AchievementCard
 import kotlin.math.min
-
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Achievements(gamificationViewModel: GamificationViewModel) {
-    Column{
-        Text("uauauaua")
-    }
+    LazyColumn {
+        var achievements = gamificationViewModel.getAchievements()
+        achievements.forEach { (key, value) ->
+            item { AchievementCard((value.first), key, value.second) }
+        }
 
+//        item { AchievementCard(true, "3 days in a row", "Streak") }
+//        item { AchievementCard(false, "10 days in a row", "Streak") }
+//        item { AchievementCard(false, "10 days in a row", "Productivity") }
+//        item { AchievementCard(false, "10 days in a row","") }
+//        item { AchievementCard(false, "10 days in a row", "Streak") }
+//        item { AchievementCard(false, "10 days in a row", "Productivity") }
+//        item { AchievementCard(false, "10 days in a row","") }
+//        item { AchievementCard(false, "10 days in a row", "Streak") }
+//        item { AchievementCard(false, "10 days in a row", "Productivity") }
+//        item { AchievementCard(false, "10 days in a row","") }
+    }
 }

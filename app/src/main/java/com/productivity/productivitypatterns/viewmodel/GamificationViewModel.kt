@@ -8,7 +8,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 
-class GamificationViewModel(private val context: Context):  ViewModel() {
+class GamificationViewModel(private val context: Context, val localSessionViewModel: LocalSessionViewModel):  ViewModel() {
     private var gamification: Gamification = Gamification();
 
     init {
@@ -17,13 +17,13 @@ class GamificationViewModel(private val context: Context):  ViewModel() {
 
 
     private fun getPlayerInformation() {
-        val file = File(context.filesDir, "user_gamification2.json")
+        val file = File(context.filesDir, "user_gamification.json")
         if (file.exists()) {
             val json = file.readText()
             gamification = Json.decodeFromString<Gamification>(json)
         } else {
             val json = Json.encodeToString(gamification)
-            val file = File(context.filesDir, "user_gamification2.json")
+            val file = File(context.filesDir, "user_gamification.json")
             file.writeText(json)
         }
     }
@@ -37,14 +37,28 @@ class GamificationViewModel(private val context: Context):  ViewModel() {
         loadUserGamification()
     }
 
+    fun checkAchievements(): Unit{
+        if(localSessionViewModel.sessionCount()>0){
+            gamification.toggleChallengeStatus("Add one session")
+        }
+
+
+        saveUserGamification()
+        loadUserGamification()
+    }
+
+    fun getAchievements():  Map<String, Pair<Boolean, String>>{
+        return gamification.challenge
+    }
+
     fun saveUserGamification() {
         val json = Json.encodeToString(gamification)
-        val file = File(context.filesDir, "user_gamification2.json")
+        val file = File(context.filesDir, "user_gamification.json")
         file.writeText(json)
     }
 
     fun loadUserGamification() {
-        val file = File(context.filesDir, "user_gamification2.json")
+        val file = File(context.filesDir, "user_gamification.json")
         if (file.exists()) {
             val json = file.readText()
             gamification= Json.decodeFromString<Gamification>(json)
