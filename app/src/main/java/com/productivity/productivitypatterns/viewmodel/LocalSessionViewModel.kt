@@ -42,7 +42,6 @@ class LocalSessionViewModel(private val context: Context): ViewModel() {
         val file = File(context.filesDir, "user_sessions.json")
         if (file.exists()) {
             val json = file.readText()
-
             _sessionList.value = Json.decodeFromString<MutableList<Session>>(json)
         } else {
             val json = Json.encodeToString(_sessionList.value)

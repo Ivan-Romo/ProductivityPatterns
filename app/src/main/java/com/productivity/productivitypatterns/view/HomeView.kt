@@ -41,6 +41,7 @@ fun Home(
     var context = LocalContext.current
     var sessionViewModel =  LocalSessionViewModel(context)
     var gamificationViewModel =  GamificationViewModel(context, localSessionViewModel = sessionViewModel)
+    var patternsViewModel = PatternsViewModel(context);
     var adManager = AdManager(context)
     var personalViewModel = PersonalViewModel(context)
     val navController = rememberNavController()
@@ -53,6 +54,14 @@ fun Home(
             icon = Icons.Filled.BarChart,
             unselectedIcon = Icons.Outlined.BarChart,
             route = "WeekStats",
+            hasNews = false,
+            badgeCount = 45
+        ),
+        BottomNavigationItem(
+            title = "Patterns",
+            icon = Icons.Filled.LocalFireDepartment,
+            unselectedIcon = Icons.Outlined.LocalFireDepartment,
+            route = "Patterns",
             hasNews = false,
             badgeCount = 45
         ),
@@ -159,6 +168,9 @@ fun Home(
                 }
                 composable("WeekStats") {
                     WeekStatsView(StatsViewModel(sessionViewModel.sessionList.value), personalViewModel, sessionViewModel)
+                }
+                composable("Patterns") {
+                    PatternsView(StatsViewModel(sessionViewModel.sessionList.value), personalViewModel, sessionViewModel, patternsViewModel )
                 }
                 composable("Personal") {
                     PersonalView(personalViewModel, authViewModel)
