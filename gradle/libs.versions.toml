@@ -12,6 +12,7 @@ composeBom = "2024.04.01"
 materialIconsExtended = "1.6.8"
 navigationCompose = "2.7.7"
 firebaseAuthKtx = "23.0.0"
+okhttp = "4.10.0"
 runtimeLivedata = "1.6.8"
 lifecycleRuntimeComposeAndroid = "2.8.4"
 
@@ -38,6 +39,7 @@ firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx",
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

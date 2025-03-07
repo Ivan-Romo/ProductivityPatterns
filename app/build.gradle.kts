@@ -1,9 +1,15 @@
+import java.util.*
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
     kotlin("plugin.serialization") version "1.9.0"
 }
+val localProperties = File(rootDir, "local.properties")
+val properties = Properties().apply { load(localProperties.inputStream()) }
+val deepSeekApiKey = properties.getProperty("DEEPSEEK_API_KEY", "")
+
 
 android {
     namespace = "com.productivity.productivitypatterns"
@@ -23,9 +29,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "DEEPSEEK_API_KEY", "\"$deepSeekApiKey\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            buildConfigField("String", "DEEPSEEK_API_KEY", "\"$deepSeekApiKey\"")
         }
     }
     compileOptions {
@@ -37,6 +47,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -85,4 +96,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.okhttp)
 }
