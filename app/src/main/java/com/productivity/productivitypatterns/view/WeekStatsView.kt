@@ -6,7 +6,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Help
+import androidx.compose.material.icons.filled.ShowChart
+import androidx.compose.material.icons.outlined.Help
+import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -15,9 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.productivity.productivitypatterns.components.TypeDropdown
 import com.productivity.productivitypatterns.components.charts.BarChart
 import com.productivity.productivitypatterns.components.charts.LineChart
@@ -219,6 +227,27 @@ fun StatsContent(
                                     questFromList?.question ?: questFromCustom!!.id,
                                     textAlign = TextAlign.Left,
                                     fontFamily = InterFontFamily
+                                )
+                            }
+
+                            Row(
+                                verticalAlignment = Alignment.Top,
+                                horizontalArrangement = Arrangement.Start,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+
+                                Icon(
+                                    imageVector = Icons.Outlined.HelpOutline,
+                                    contentDescription = null,
+                                    tint = Color(160,160,160),
+                                            modifier = Modifier.size(20.dp)
+                                )
+                                Text(
+                                    text="The number indicates the average productivity for each case.",
+                                    textAlign = TextAlign.Left,
+                                    fontFamily = InterFontFamily,
+                                    fontSize = 13.sp,
+                                    color = Color(160,160,160)
                                 )
                             }
 

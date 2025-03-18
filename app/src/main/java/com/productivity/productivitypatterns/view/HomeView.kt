@@ -59,8 +59,8 @@ fun Home(
         ),
         BottomNavigationItem(
             title = "Patterns",
-            icon = Icons.Filled.LocalFireDepartment,
-            unselectedIcon = Icons.Outlined.LocalFireDepartment,
+            icon = Icons.Filled.ShowChart,
+            unselectedIcon = Icons.Outlined.ShowChart,
             route = "Patterns",
             hasNews = false,
             badgeCount = 45
@@ -106,7 +106,7 @@ fun Home(
                     )
 
                 }, modifier = Modifier
-                    .shadow(4.dp) // Añade una sombra de 4.dp
+                    .shadow(4.dp)
                     .background(colorScheme.background)
             )
         }, bottomBar = {
@@ -120,7 +120,7 @@ fun Home(
                             topStart = 30.dp, topEnd = 30.dp
                         )
                     )
-                    .background(colorScheme.tertiaryContainer)  // Fondo del NavigationBar para que la sombra sea visible
+                    .background(colorScheme.tertiaryContainer)
                     .graphicsLayer {
                         clip = true
                         shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
@@ -150,7 +150,12 @@ fun Home(
                                 } else colorScheme.onSurface
                             )
                         }
-                    })
+                    },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.White, // Color del icono seleccionado
+                            selectedTextColor = Color.White, // Color del texto seleccionado
+                            indicatorColor = Color(13, 188, 171) // Color del fondo cuando está seleccionado
+                        ))
                 }
             }
 
@@ -170,7 +175,7 @@ fun Home(
                     WeekStatsView(StatsViewModel(sessionViewModel.sessionList.value), personalViewModel, sessionViewModel)
                 }
                 composable("Patterns") {
-                    PatternsView(StatsViewModel(sessionViewModel.sessionList.value), personalViewModel, sessionViewModel, patternsViewModel )
+                    PatternsView(StatsViewModel(sessionViewModel.sessionList.value), personalViewModel, sessionViewModel, patternsViewModel, adManager, activity )
                 }
                 composable("Personal") {
                     PersonalView(personalViewModel, authViewModel)
