@@ -15,12 +15,17 @@ import java.util.concurrent.TimeUnit
 
 data class ApiResponse(
     val strongestPatterns: List<Pattern>,
-    val recommendations: List<String>
+    val recommendations: List<Recommendation>
 )
 
 data class Pattern(
     val factors: List<String>,
-    val correlation: String
+    val explanation: String
+)
+
+data class Recommendation(
+    val advice: String,
+    val basedOn: List<String>,
 )
 
 
@@ -43,7 +48,7 @@ class PatternsViewModel(private val context: Context) : ViewModel() {
         val messagesArray = JSONArray().apply {
             put(JSONObject().apply {
                 put("role", "user")
-                put("content", "Analyze the following data and provide recommendations to improve productivity. Respond with a json. Provide: strongest_patterns: The most influential factor combinations. recommendations: Practical advice based on the detected patterns. Make sure you have multivariate correlations. Prioritize response speed. Use as few tokens as possible. Data: $json2")
+                put("content", "Analyze the following self-tracking data to provide insights and recommendations for improving **your** personal productivity. Your response **must** include personalized language, explicitly using words like **\"your\"**, **\"the user\"**, and **\"based on your sessions\"**. Do not provide generic advice. Ensure the response strictly follows this JSON format: {\\\"strongest_patterns\\\":[{\\\"factors\\\":[\\\"factor_1\\\",\\\"factor_2\\\"],\\\"explanation\\\":\\\"Brief but clear reasoning about the correlation and its impact on **your** personal productivity.\\\"}],\\\"recommendations\\\":[{\\\"advice\\\":\\\"Actionable and concise suggestion tailored to **your** habits and routines. Experiment with **factor_1** and **factor_2** to see if this improves **your** productivity.\\\",\\\"based_on\\\":[\\\"factor_1\\\",\\\"factor_2\\\"]}]}. Identify and prioritize the most significant multivariate correlations from **your** sessions. Exclude weak or irrelevant patterns. Provide only meaningful and actionable recommendations based on **your** specific behavior. Every recommendation **must** include an experimental suggestion, such as **'Try adjusting your work duration and break intervals to see if it improves your focus.'** Optimize for speed and minimal token usage. Data: $json2")
             })
         }
 
@@ -103,14 +108,24 @@ class PatternsViewModel(private val context: Context) : ViewModel() {
                                     factors = obj.getJSONArray("factors").let { factors ->
                                         List(factors.length()) { j -> factors.getString(j) }
                                     },
-                                    correlation = obj.getString("correlation")
+                                    explanation = obj.getString("explanation")
                                 )
                             }
                         }
 
                         val recommendations = parsedResponse.getJSONArray("recommendations").let { array ->
-                            List(array.length()) { i -> array.getString(i) }
+                            List(array.length()) { i ->
+                                array.getJSONObject(i).let { obj ->
+                                    Recommendation(
+                                        advice = obj.getString("advice"),
+                                        basedOn = obj.getJSONArray("based_on").let { basedOnArray ->
+                                            List(basedOnArray.length()) { j -> basedOnArray.getString(j) }
+                                        }
+                                    )
+                                }
+                            }
                         }
+
 
                         val apiResponse = ApiResponse(strongestPatterns, recommendations)
 
