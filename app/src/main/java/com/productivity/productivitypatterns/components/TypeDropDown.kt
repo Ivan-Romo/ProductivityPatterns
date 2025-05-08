@@ -24,13 +24,14 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import com.productivity.productivitypatterns.ui.theme.InterFontFamily
+import com.productivity.productivitypatterns.viewmodel.GamificationViewModel
 import com.productivity.productivitypatterns.viewmodel.LocalSessionViewModel
 import com.productivity.productivitypatterns.viewmodel.PersonalViewModel
 import com.productivity.productivitypatterns.viewmodel.SessionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TypeDropdown(viewModel: PersonalViewModel, onChangeType: (String) -> Unit, sessionViewModel: LocalSessionViewModel) {
+fun TypeDropdown(viewModel: PersonalViewModel, onChangeType: (String) -> Unit, sessionViewModel: LocalSessionViewModel, gamificationViewModel: GamificationViewModel) {
     var selectedOption by remember { mutableStateOf(sessionViewModel.getLastSessionType()) }
     var expanded by remember { mutableStateOf(false) }
     var options by remember { mutableStateOf(viewModel.info.activityTypes) }
@@ -140,7 +141,7 @@ fun TypeDropdown(viewModel: PersonalViewModel, onChangeType: (String) -> Unit, s
 
         if (showDialog) {
             AlertDialog(containerColor = colorScheme.surface, onDismissRequest = { showDialog = false }, title = {
-                Text("Add New Question")
+                Text("Add session type")
             }, text = {
                 BoxWithConstraints {
                     var constr = this
@@ -150,7 +151,7 @@ fun TypeDropdown(viewModel: PersonalViewModel, onChangeType: (String) -> Unit, s
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Question text")
+                        Text("Type")
                         TextField(value = type ?: "",
                             onValueChange = { newText -> type = newText },
                             label = { Text("Enter activity type") })
@@ -158,6 +159,7 @@ fun TypeDropdown(viewModel: PersonalViewModel, onChangeType: (String) -> Unit, s
                 }
             }, confirmButton = {
                 Button(onClick = {
+                    gamificationViewModel.sessionTypeAdded();
                     if (type != "") {
                         selectedOption = type
                         onChangeType(type)

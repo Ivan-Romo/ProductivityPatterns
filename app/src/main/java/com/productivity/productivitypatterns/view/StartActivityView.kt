@@ -202,7 +202,7 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                                 fontFamily = InterFontFamily,
                                 minLines = 2,
                             )
-                            TypeDropdown(personalViewModel, onChangeType = { type = it }, sessionViewModel = viewModel)
+                            TypeDropdown(personalViewModel, onChangeType = { type = it }, sessionViewModel = viewModel, gamificationViewModel)
                         }
                         Box(
                             Modifier

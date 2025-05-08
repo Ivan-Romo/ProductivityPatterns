@@ -172,13 +172,13 @@ fun Home(
                     DevelopView(modifier, auxNavController, authViewModel, personalViewModel = personalViewModel)
                 }
                 composable("WeekStats") {
-                    WeekStatsView(StatsViewModel(sessionViewModel.sessionList.value), personalViewModel, sessionViewModel)
+                    WeekStatsView(StatsViewModel(sessionViewModel.sessionList.value), personalViewModel, sessionViewModel, gamificationViewModel)
                 }
                 composable("Patterns") {
-                    PatternsView(StatsViewModel(sessionViewModel.sessionList.value), personalViewModel, sessionViewModel, patternsViewModel, adManager, activity )
+                    PatternsView(StatsViewModel(sessionViewModel.sessionList.value), personalViewModel, sessionViewModel, patternsViewModel, gamificationViewModel,adManager, activity )
                 }
                 composable("Personal") {
-                    PersonalView(personalViewModel, authViewModel)
+                    PersonalView(personalViewModel, authViewModel, gamificationViewModel)
                 }
                 composable("Achievements") {
                     Achievements(gamificationViewModel)

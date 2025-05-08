@@ -25,10 +25,11 @@ import com.productivity.productivitypatterns.domain.Question
 import com.productivity.productivitypatterns.ui.theme.InterFontFamily
 import com.productivity.productivitypatterns.viewmodel.AdManager
 import com.productivity.productivitypatterns.viewmodel.AuthViewModel
+import com.productivity.productivitypatterns.viewmodel.GamificationViewModel
 import com.productivity.productivitypatterns.viewmodel.PersonalViewModel
 
 @Composable
-fun PersonalView(viewModel: PersonalViewModel, authViewModel: AuthViewModel) {
+fun PersonalView(viewModel: PersonalViewModel, authViewModel: AuthViewModel, gamificationViewModel: GamificationViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -228,7 +229,7 @@ fun PersonalView(viewModel: PersonalViewModel, authViewModel: AuthViewModel) {
                             Button(
                                 onClick = {
                                     showDialog = false
-
+                                    gamificationViewModel.simpleAchievmentCompleted("Add a custom question");
                                     var quest: Question? = null
 
                                     if (type == "yesno") {

@@ -33,6 +33,10 @@ class GamificationViewModel(private val context: Context, val localSessionViewMo
     }
     fun addPoints(points: Int){
         gamification.points+=points
+        if(gamification.points>3){
+            gamification.points = 0;
+            gamification.level++;
+        }
         saveUserGamification()
         loadUserGamification()
     }
@@ -43,6 +47,29 @@ class GamificationViewModel(private val context: Context, val localSessionViewMo
         }
 
 
+        saveUserGamification()
+        loadUserGamification()
+    }
+
+    fun reportGenerated(): Unit{
+        if(!gamification.challenge["Generate a report"]!!.first)
+            gamification.toggleChallengeStatus("Generate a report")
+
+        saveUserGamification()
+        loadUserGamification()
+    }
+
+    fun simpleAchievmentCompleted(key:String): Unit{
+        if(!gamification.challenge[key]!!.first)
+            gamification.toggleChallengeStatus(key)
+
+        saveUserGamification()
+        loadUserGamification()
+    }
+
+    fun sessionTypeAdded(): Unit{
+        if(!gamification.challenge["Add a session type"]!!.first)
+            gamification.toggleChallengeStatus("Add a session type")
         saveUserGamification()
         loadUserGamification()
     }

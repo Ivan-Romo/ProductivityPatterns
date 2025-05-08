@@ -41,7 +41,8 @@ import kotlinx.coroutines.delay
 fun WeekStatsView(
     statsViewModel: StatsViewModel,
     personalViewModel: PersonalViewModel,
-    sessionViewModel: LocalSessionViewModel
+    sessionViewModel: LocalSessionViewModel,
+    gamificationViewModel: GamificationViewModel
 ) {
     var type by remember { mutableStateOf(statsViewModel.sessionData.last().type) }
     var isLoading by remember { mutableStateOf(true) }
@@ -76,7 +77,7 @@ fun WeekStatsView(
 
                     TypeDropdown(personalViewModel, onChangeType = { selectedType ->
                         type = selectedType
-                    }, sessionViewModel = sessionViewModel)
+                    }, sessionViewModel = sessionViewModel, gamificationViewModel)
                     key(type) {
                         StatsContent(type = type, statsViewModel, personalViewModel, constr)
                     }

@@ -34,6 +34,7 @@ fun PatternsView(
     personalViewModel: PersonalViewModel,
     sessionViewModel: LocalSessionViewModel,
     patternsViewModel: PatternsViewModel,
+    gamificationViewModel: GamificationViewModel,
     adManager: AdManager,
     activity: Activity
 ) {
@@ -82,8 +83,8 @@ fun PatternsView(
                     modifier = Modifier
                         .padding(top = 16.dp)
                         .width(constr.maxWidth * 0.9f)
-                        .shadow(8.dp, RoundedCornerShape(16.dp)) // Elevación con bordes redondeados
-                        .clip(RoundedCornerShape(16.dp)) // Recorte para asegurar los bordes redondeados
+                        .shadow(8.dp, RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(16.dp))
                         .background(colorScheme.surface)
                 ) {
                     Column(
@@ -134,6 +135,7 @@ fun PatternsView(
                             .clickable(onClick = {
                                 adManager.showRewardedAd(activity) { rewardAmount ->
                                     fetchData()
+                                    gamificationViewModel.reportGenerated();
                                 }
                             })
                             .padding(16.dp)
