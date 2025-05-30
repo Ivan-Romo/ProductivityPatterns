@@ -28,6 +28,9 @@ class GamificationViewModel(private val context: Context, val localSessionViewMo
         }
     }
 
+    fun getLevel():Int {
+        return gamification.level
+    }
     fun getPoints(): Int{
         return gamification.points
     }
@@ -42,36 +45,43 @@ class GamificationViewModel(private val context: Context, val localSessionViewMo
     }
 
     fun checkAchievements(): Unit{
-        if(localSessionViewModel.sessionCount()>0){
+        if(localSessionViewModel.sessionCount()>0) {
             gamification.toggleChallengeStatus("Add one session")
+
+            gamification.points++
+
+            saveUserGamification()
+            loadUserGamification()
         }
-
-
-        saveUserGamification()
-        loadUserGamification()
     }
 
-    fun reportGenerated(): Unit{
-        if(!gamification.challenge["Generate a report"]!!.first)
+    fun reportGenerated(): Unit {
+        if (!gamification.challenge["Generate a report"]!!.first){
             gamification.toggleChallengeStatus("Generate a report")
-
-        saveUserGamification()
-        loadUserGamification()
+            gamification.points++
+            saveUserGamification()
+            loadUserGamification()
+        }
     }
 
     fun simpleAchievmentCompleted(key:String): Unit{
-        if(!gamification.challenge[key]!!.first)
+        if(!gamification.challenge[key]!!.first) {
             gamification.toggleChallengeStatus(key)
+            gamification.points++
 
-        saveUserGamification()
-        loadUserGamification()
+            saveUserGamification()
+            loadUserGamification()
+        }
     }
 
     fun sessionTypeAdded(): Unit{
-        if(!gamification.challenge["Add a session type"]!!.first)
+        if(!gamification.challenge["Add a session type"]!!.first) {
             gamification.toggleChallengeStatus("Add a session type")
-        saveUserGamification()
-        loadUserGamification()
+            gamification.points++
+
+            saveUserGamification()
+            loadUserGamification()
+        }
     }
 
     fun getAchievements():  Map<String, Pair<Boolean, String>>{

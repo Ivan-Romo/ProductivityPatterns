@@ -15,13 +15,13 @@ data class Gamification(
             "Add a session type" to Pair(false,"Productivity"),
             "Add a custom question" to Pair(false,"Productivity"),
             "Add a session manually" to Pair(false,"Productivity"), //not done
-            "Try to disable one question" to Pair(false,"Productivity"), //not done
+            "Try to disable one question" to Pair(false,"Productivity"),
             "Add three custom questions" to Pair(false,"Productivity"), //not done
             "Add a hundred sessions" to Pair(false,"Productivity"), //not done
             "Generate 3 reports" to Pair(false,"Productivity"), //not done
-            "Add one session past 10pm" to Pair(false,"Productivity"), //not done
-            "Add one session before 7am" to Pair(false,"Productivity"), //not done
-            "Have a fully productive session" to Pair(false,"Productivity"), //not done
+            "Add one session after 10pm" to Pair(false,"Productivity"),
+            "Add one session before 7am" to Pair(false,"Productivity"),
+            "Add a fully productive session" to Pair(false,"Productivity"), //not done
 
         )
 ){

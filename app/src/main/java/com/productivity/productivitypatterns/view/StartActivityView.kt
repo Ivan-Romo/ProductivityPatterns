@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.productivity.productivitypatterns.components.BadgeViewer
 import com.productivity.productivitypatterns.components.Buttons.MediumButton
 import com.productivity.productivitypatterns.components.DisplayQuestion
 import com.productivity.productivitypatterns.components.Buttons.SmallButton
@@ -75,7 +76,9 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                         verticalArrangement = Arrangement.SpaceBetween,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(Modifier.padding(top = 80.dp)) {
+                        Column(Modifier.padding(top = 20.dp)) {
+                            BadgeViewer(gamificationViewModel);
+
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -240,6 +243,12 @@ fun StartActivityView(viewModel: LocalSessionViewModel, personalViewModel: Perso
                                         viewModel.createSession(session)
                                         gamificationViewModel.addPoints(1)
                                         gamificationViewModel.checkAchievements();
+                                        if(session.datetime.hour+2<=7){
+                                            gamificationViewModel.simpleAchievmentCompleted("Add one session before 7am")
+                                        }
+                                        if(session.datetime.hour+2>=22){
+                                            gamificationViewModel.simpleAchievmentCompleted("Add one session after 10pm")
+                                        }
                                         adStatus = true
                                         questionIndex = 0
                                     }

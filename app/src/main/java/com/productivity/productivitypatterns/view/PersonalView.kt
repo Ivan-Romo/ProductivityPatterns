@@ -106,6 +106,7 @@ fun PersonalView(viewModel: PersonalViewModel, authViewModel: AuthViewModel, gam
                                     Checkbox(
                                         checked = isChecked,
                                         onCheckedChange = {
+                                            gamificationViewModel.simpleAchievmentCompleted("Try to disable one question");
                                             isChecked = it
                                             viewModel.changeEnabled(question.first.id)
                                         },
