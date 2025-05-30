@@ -19,15 +19,15 @@ class AdManager(val context: Context) {
     var rewardedAd: RewardedAd? = null
 
     //ESTAS SON LAS DE DEBUG
-    private val interstitialId = "ca-app-pub-3940256099942544/1033173712"
-    private val bannerId = "ca-app-pub-3940256099942544/9214589741"
-    private val rewardedID = "ca-app-pub-3940256099942544/5224354917"
+//    private val interstitialId = "ca-app-pub-3940256099942544/1033173712"
+//    private val bannerId = "ca-app-pub-3940256099942544/9214589741"
+//    private val rewardedID = "ca-app-pub-3940256099942544/5224354917"
 
 
-    //ESTAS NO SOSIO. CUIDADO
-//    private val interstitialId = "ca-app-pub-4336258340172398/9910781745"
-//    private val bannerId = "ca-app-pub-4336258340172398/3076441358"
-//    private val rewardedID = "ca-app-pub-4336258340172398/8715847390"
+    //ESTAS NO. CUIDADO
+    private val interstitialId = "ca-app-pub-4336258340172398/9910781745"
+    private val bannerId = "ca-app-pub-4336258340172398/3076441358"
+    private val rewardedID = "ca-app-pub-4336258340172398/8715847390"
 
     init {
         loadInterstitialAd({})
